@@ -39,13 +39,10 @@ body {
     color: #000;
 }
 
-#mainTitle1 {
-    display: none;
+#mainTitle {
+    display: inline-block;
 }
 
-#mainTitle2 {
-    display: none;
-}
 
 #myPage {
     width: 200px;
@@ -308,7 +305,8 @@ td {
 #noticeWriteBtn,
 #resetWrite,
 #deleteBtn,
-#noticeResetWrite {
+#noticeResetWrite,
+#delBtn {
     background-color: red;
     margin-top: 10px;
     width: 80px;
@@ -319,14 +317,11 @@ td {
     border: 0;
 }
 
-#noticeWriteBtn {
-    margin-left: 20px;
-}
-
 #noticeWriteBtn:hover,
 #resetWrite:hover,
 #deleteBtn:hover,
-#noticeResetWrite:hover {
+#noticeResetWrite:hover,
+#delBtn:hover {
     background-color: rgb(163, 6, 6);
     transition: 0.2s;
 }
@@ -379,7 +374,6 @@ td {
 #writeTable input,
 #noticeWriteTable input {
     border: 0;
-    background: #eee;
     font-family: "SOYOMapleBoldTTF";
     width: 98%;
     outline: none;
@@ -391,7 +385,6 @@ td {
     outline: none;
     font-family: "SOYOMapleBoldTTF";
     resize: none;
-    background: #eee;
     border: 0;
     font-size: 16px;
 }
@@ -404,6 +397,20 @@ td {
     width: 100%;
     height: 90%;
     background-color: #eee;
+}
+
+.whiteBoard {
+	padding-top: 20px;
+	background-color: #fff;
+	width: 90%;
+	height: 90%;
+	margin: auto;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.whiteBoard input, textarea {
+	background-color: #fff;
+	
 }
 
 .wrtieBtnZip,
@@ -558,28 +565,86 @@ section div h2 {
     display: none;
 }
 
-#mainTitle1 {
-    display: none;
-}
-
-#mainTitle1 a {
+#mainTitle a {
     text-decoration: none;
     color: #333;
 }
 
-#mainTitle2 {
-    display: none;
-}
 
-#mainTitle2 a {
-    text-decoration: none;
-    color: #333;
-}
 
 #toggleDiv {
     margin-top: 470px;
     margin-left: 700px;
 }
+
+#jewelerBtn, #crystalBtn {
+	background: #3498DB;
+    color: #fff;
+    border: 0;
+    border-radius: 5px;
+    width: 80px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+#jewelerBtn {
+	display: none;	
+}
+
+#jewelerBtn:hover, #crystalBtn:hover {
+	transition: 0.3s ease;
+    background-color: blue;
+}
+
+.hiddenTd {
+	display: none;
+}
+
+#deleteWriteBtn, #deleteWriteBtn2 {
+	display: inline-block;
+	background-color: red;
+    margin-top: 10px;
+    width: 80px;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    border: 0;
+}
+
+#deleteWriteBtn2 {
+	display: none;
+	
+}
+
+#deleteWriteBtn:hover, #deleteWriteBtn2 {
+	background-color: rgb(163, 6, 6);
+    transition: 0.2s;
+}
+
+.deleteBtn {
+	background-color: red;
+    width: 40px;
+    height: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    border: 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#deleteTH {
+	display: none;
+}
+
+.deleteBtn:hover {
+	background-color: rgb(163, 6, 6);
+    transition: 0.2s;
+}
+
+
 
 
 @media screen and (max-width: 430px) {
