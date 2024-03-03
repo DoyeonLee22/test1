@@ -559,6 +559,7 @@
 							</span>
 							<h3>설비설정을 완료 하시겠습니까?</h3>
 							<div class="option-check-botton-zip">
+								<input type="hidden" name="nDate" value="">
 								<button type="submit" class="okay-btn">확인</button>
 								<button type="button" class="nono-btn">취소</button>
 							</div>

@@ -60,6 +60,7 @@ public class MonitorServ extends HttpServlet {
 			String cool = rs.getString("e_쿨러");
 			String main = rs.getString("e_메인보드");
 			String power = rs.getString("e_파워");
+			String nDate = rs.getString("nDate");
 
 			List stock = new ArrayList();
 			
@@ -73,6 +74,7 @@ public class MonitorServ extends HttpServlet {
 			stock.add(cool);
 			stock.add(main);
 			stock.add(power);
+			stock.add(nDate);
 
 			list.add(stock);
 		}

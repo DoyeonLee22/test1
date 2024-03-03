@@ -125,8 +125,19 @@ public class OptionServ extends HttpServlet {
 	            power[i] = "Default";
 	        }
 	    }
+	    
+	    String[] nDateArr = request.getParameterValues("nDate");
+	    List<java.sql.Timestamp> dateList = new ArrayList<>();
+	    for (String nDateStr : nDateArr) {
+	    	nDateStr += ":00";
+	        java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(nDateStr);
+	        dateList.add(timestamp);
+	    }    
+	    
 
-	    String query = "INSERT INTO equipment (e_sequence, e_grade, e_count, e_gpu, e_ssd, e_ram, e_cpu, e_쿨러, e_메인보드, e_파워) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    String query = "INSERT INTO equipment"
+	    		+ " (e_sequence, e_grade, e_count, e_gpu, e_ssd, e_ram, e_cpu, e_쿨러, e_메인보드, e_파워, nDate)"
+	    		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	    PreparedStatement ps = con.prepareStatement(query);
 
 	    for (int i = 0; i < selectGrades.length; i++) {
@@ -143,6 +154,7 @@ public class OptionServ extends HttpServlet {
 	        ps.setString(8, cooler[i]);
 	        ps.setString(9, mainboard[i]);
 	        ps.setString(10, power[i]);
+	        ps.setTimestamp(11, dateList.get(i));
 
 	        int start = ps.executeUpdate();
 	    }

@@ -336,6 +336,19 @@ let okaybtn = document.querySelector(".okay-btn");
 openModalBtn.addEventListener("click", function() {
 	modal.style.display = "block";
 	modal.style.pointerEvents = "auto";
+
+    let todayTime = new Date();
+	let wdate = "";
+	let nowYear = todayTime.getFullYear();
+	let nowMonth = ('0' + (todayTime.getMonth() + 1)).slice(-2);
+	let nowDate = ('0' + todayTime.getDate()).slice(-2);
+	
+	let nowHour = ('0' + todayTime.getHours()).slice(-2);
+	let nowMin = ('0' + todayTime.getMinutes()).slice(-2);
+	
+	wdate = nowYear + "-" + nowMonth + "-" + nowDate + " " + nowHour + ":" + nowMin;
+	document.querySelector("input[name=nDate]").value = wdate;
+	console.log("wdate : " + wdate)
 });
 
 closeModalBtn.addEventListener("click", function() {

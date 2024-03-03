@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*"%>
+<%@ page import="java.time.format.DateTimeFormatter"%>
+<%@ page import="java.time.LocalDateTime"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -138,173 +140,242 @@
 			<section>
 				<h1 style="text-align: center; font-size: 30px; margin-top: 40px">공정도</h1>
 				<div class="process-chart">
-					<div id="section-nav">
-						<%
-						List<List> list = (List<List>)request.getAttribute("list");
-						for(int i=1; i<=4; i++) {
+					<form method="GET" action="proc" id="myForm">
+						<div id="section-nav">
+							<%
+						List<List> list = (List<List>) request.getAttribute("list");
+						for (int i = 1; i <= 4; i++) {
 						%>
-						<div class="tree-graph-line-title<%=i %>"><%=i %>번 라인</div>
-						<%
+							<div class="tree-graph-line-title<%=i%>">
+								<input type="hidden" value="<%=i%>번 라인" name="lineNum">
+								<%=i%>번 라인
+							</div>
+							<%
 						}
 						%>
-					</div>
-					
-					<div id="treeLine">
-						<div class="tree-line1"></div>
-						<div class="tree-line2"></div>
-					
+						</div>
 
-						<%
-						
+						<div id="treeLine">
+							<div class="tree-line1"></div>
+							<div class="tree-line2"></div>
+							<div class="tree-line3"></div>
+
+
+							<%
 						System.out.println("list 크기 : " + list.size()); // 3
-						for(int i=0; i<list.size(); i++) {
+						List map = null;
+						for (int i = 0; i < list.size(); i++) {
 							List monitor = list.get(i);
-							
-							List map = new ArrayList();
-							
+
+							map = new ArrayList();
+
 							System.out.println("monitor 크기 : " + monitor.size()); // 10
-	
-							if(monitor.get(0) instanceof Number) {
+
+							if (monitor.get(0) instanceof Number) {
 								map.add(monitor.get(0) + "번 라인 점검");
 							}
-							
-							if("1".equals(monitor.get(1))) {
+
+							if ("1".equals(monitor.get(1))) {
 								map.add("퍼포먼스 등급");
-							} else if("2".equals(monitor.get(1))) {
-								map.add("메인스트림 등급");								
-							} else if("3".equals(monitor.get(1))) {
-								map.add("엔트리 등급");								
+							} else if ("2".equals(monitor.get(1))) {
+								map.add("메인스트림 등급");
+							} else if ("3".equals(monitor.get(1))) {
+								map.add("엔트리 등급");
 							}
-							
-							int count = (int)monitor.get(2);
+
+							int count = (int) monitor.get(2);
 							map.add("생산개수 : " + count + "개");
-							
+
 							map.add("수정사항 확인");
-							
-							String gpu = (String)monitor.get(3);
-							if(gpu.indexOf("RTX 4080TI") >= 0) {
+
+							String gpu = (String) monitor.get(3);
+							if (gpu.indexOf("RTX 4080TI") >= 0) {
 								map.add("RTX 4080TI");
-							} else if(gpu.indexOf("RX 6800 XT") >= 0) {
-								map.add("RX 6800 XT");								
-							} else if(gpu.indexOf("GTX 1660 Ti") >= 0) {
-								map.add("GTX 1660 Ti");																
+							} else if (gpu.indexOf("RX 6800 XT") >= 0) {
+								map.add("RX 6800 XT");
+							} else if (gpu.indexOf("GTX 1660 Ti") >= 0) {
+								map.add("GTX 1660 Ti");
 							}
-							
-							String ssd = (String)monitor.get(4);
-							if(ssd.indexOf("4TB") >= 0) {
+
+							String ssd = (String) monitor.get(4);
+							if (ssd.indexOf("4TB") >= 0) {
 								map.add("4TB SSD");
-							} else if(ssd.indexOf("1TB") >= 0) {
-								map.add("1TB SSD");								
-							} else if(ssd.indexOf("500GB") >= 0) {
-								map.add("500GB SSD");																
+							} else if (ssd.indexOf("1TB") >= 0) {
+								map.add("1TB SSD");
+							} else if (ssd.indexOf("500GB") >= 0) {
+								map.add("500GB SSD");
 							}
-							
-							String ram = (String)monitor.get(5);
-							if(ram.indexOf("32GB") >= 0) {
+
+							String ram = (String) monitor.get(5);
+							if (ram.indexOf("32GB") >= 0) {
 								map.add("32GB RAM");
-							} else if(ram.indexOf("16GB") >= 0) {
+							} else if (ram.indexOf("16GB") >= 0) {
 								map.add("16GB RAM");
-							} else if(ram.indexOf("8GB") >= 0) {
+							} else if (ram.indexOf("8GB") >= 0) {
 								map.add("8GB RAM");
 							}
-							
-							String cpu = (String)monitor.get(6);
-							if(cpu.indexOf("O9") >= 0) {
+
+							String cpu = (String) monitor.get(6);
+							if (cpu.indexOf("O9") >= 0) {
 								map.add("O9-14900K");
-							} else if(cpu.indexOf("O5") >= 0) {
+							} else if (cpu.indexOf("O5") >= 0) {
 								map.add("O5-14500");
-							} else if(cpu.indexOf("O3") >= 0) {
+							} else if (cpu.indexOf("O3") >= 0) {
 								map.add("O3-14100");
 							}
-							
-							String cool = (String)monitor.get(7);
-							if(cool.indexOf("Noctua NH-D15 Cooler") >= 0) {
+
+							String cool = (String) monitor.get(7);
+							if (cool.indexOf("Noctua NH-D15 Cooler") >= 0) {
 								map.add("Noctua NH-D15");
-							} else if(cool.indexOf("RGB Platinum Cooler") >= 0) {
+							} else if (cool.indexOf("RGB Platinum Cooler") >= 0) {
 								map.add("RGB Platinum");
-							} else if(cool.indexOf("Black Edition Cooler") >= 0) {
+							} else if (cool.indexOf("Black Edition Cooler") >= 0) {
 								map.add("Black Edition");
-							} 
-							
-							String main = (String)monitor.get(8);
-							if(main.indexOf("AZUZ") >= 0) {
+							}
+
+							String main = (String) monitor.get(8);
+							if (main.indexOf("AZUZ") >= 0) {
 								map.add("AZUZ Z590-E");
-							} else if(main.indexOf("TERABYTE") >= 0) {
+							} else if (main.indexOf("TERABYTE") >= 0) {
 								map.add("TERABYTE A520M");
-							} else if(main.indexOf("MZI") >= 0) {
+							} else if (main.indexOf("MZI") >= 0) {
 								map.add("MZI B550");
-							} 
-							
-							String power = (String)monitor.get(9);
-							if(power.indexOf("1000W") >= 0) {
+							}
+
+							String power = (String) monitor.get(9);
+							if (power.indexOf("1000W") >= 0) {
 								map.add("1000W 파워");
-							} else if(power.indexOf("850W") >= 0) {
+							} else if (power.indexOf("850W") >= 0) {
 								map.add("850W 파워");
-							} else if(power.indexOf("550W") >= 0) {
+							} else if (power.indexOf("550W") >= 0) {
 								map.add("550W 파워");
 							}
-							
+
 							map.add("조립 검토");
 						%>
-							<div class="treeProcess<%=i %>">
-							<%
+							<div class="treeProcess<%=i%>">
+								<input type="hidden" name="grade<%=i %>"
+									value="<%=map.get(1) %>">
+								<%
 							System.out.println("map.size : " + map.size());
-							for(int j = 0; j < map.size(); j++) {
-							System.out.println(j + "번 인덱스 map 내용 : " + map.get(j));								
-								if(!"Default".equals(map.get(j)) || "수정사항 확인".equals(map.get(j)) || "조립 검토".equals(map.get(j))) {
-								System.out.println(j + "번 인덱스 map 내용 : " + map.get(j) + "if문");								
-									if(j < 3) {
+							for (int j = 0; j < map.size(); j++) {
+								System.out.println(j + "번 인덱스 map 내용 : " + map.get(j));
+								if (!"Default".equals(map.get(j)) || "수정사항 확인".equals(map.get(j)) || "조립 검토".equals(map.get(j))) {
+									System.out.println(j + "번 인덱스 map 내용 : " + map.get(j) + "if문");
+									if (j < 3) {
 							%>
-										<div class="treecircle<%=j %>" style="line-height: 150px;background-color: red; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; top: -13%; left: calc(<%=(j+1)*30 %>% - 150px) "><%=map.get(j) %></div>
-							<%
-									} else if(j >= 3 && j < 6 ) {
-							%>	
-										<div class="treecircle<%=j %>" style="line-height: 150px;background-color: red; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; top: 34%; left: calc(<%=180 - (j*30) %>% - 150px)"><%=map.get(j) %></div>	
-							<%	
-									} else if(j >= 6) {
+								<div class="treecircle<%=j%>"
+									style="line-height: 150px; background-color: #4c54cb; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; color: #fff; top: -14%; left: calc(<%=(j + 1) * 30%>% - 150px) "><%=map.get(j)%></div>
+								<div class="treeGo<%=j%>"
+									style="font-size: 30px; position: absolute; top: -1.5%; left: <%=(j + 1) * 29 + 4%>%">
+									>>></div>
+								<%
+							} else if (j >= 3 && j < 6) {
 							%>
-										<div class="treecircle<%=j %>" style="line-height: 150px;background-color: red; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; top: 82%; left: calc(<%=(j-5)*30 %>% - 150px)"><%=map.get(j) %></div>	
-							<% 
-									}
-								}
+								<div class="treecircle<%=j%>"
+									style="line-height: 150px; background-color: #4c54cb; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; color: #fff; top: 34%; left: calc(<%=180 - (j * 30)%>% - 150px)"><%=map.get(j)%></div>
+								<div class="treeGo<%=j%>"
+									style="font-size: 30px; position: absolute; top: 46.5%; left: <%=182 - ((j + 1) * 30)%>%">
+									<<<</div>
+								<%
+							} else if (j >= 6 && j < 9) {
+							%>
+								<div class="treecircle<%=j%>"
+									style="line-height: 150px; background-color: #4c54cb; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; color: #fff; top: 82%; left: calc(<%=(j - 5) * 30%>% - 150px)"><%=map.get(j)%></div>
+								<%
+							if (j < (map.size() - 1)) {
+							%>
+								<div class="treeGo<%=j%>"
+									style="font-size: 30px; position: absolute; top: 94%; left: <%=(j - 5) * 30 + 2%>%">
+									>>></div>
+								<%
+							}
+							} else {
+							%>
+								<div class="treecircle<%=j%>"
+									style="line-height: 150px; background-color: #4c54cb; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; color: #fff; top: 120%; left: calc(<%=180 - ((j - 7) * 30)%>% - 150px)"><%=map.get(j)%></div>
+								<%
+							if (j < (map.size() - 1)) {
+							%>
+								<div class="treeGo<%=j%>"
+									style="font-size: 30px; position: absolute; top: 134%; left: <%=182 - ((j - 5) * 30)%>%">
+									<<<</div>
+								<%
+							}
+
+							}
+							}
 							}
 							%>
-							</div>	
-						<%
+							</div>
+							<%
 						}
 						%>
-					</div>
+						</div>
 
-					<table class="process-chart-time-table">
-						<thead>
-							<tr>
-								<th>일시</th>
-								<th>완성된 컴퓨터 수</th>
-								<th>진행상황</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>2024-02-02<br>
-								<br> 시작시간 : 09 : 00<br> <!-- 설비설정을 누른 시간 --> 현재시간 : 14
-									: 06
-								</td>
-								<td class="completeComputer">0</td>
-								<td class="completeComputer-progress">설계 확인중</td>
-							</tr>
-						</tbody>
-					</table>
+
+						<%
+						for (int i = 0; i < 4; i++) {
+							String[] nowDate = {"", ""}; // 변수를 미리 선언하고 초기화
+							try {
+								String nowTime = (String) list.get(i).get(10);
+								if (nowTime != null) {
+							nowDate = nowTime.split(" "); // 값을 할당
+								}
+						%>
+						<table class="process-chart-time-table<%=i%>">
+							<thead>
+								<tr>
+									<th>일시</th>
+									<th>완성된 컴퓨터 수</th>
+									<th>진행상황</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><%=nowDate[0]%><br> <br> 시작시간 : <%=nowDate[1]%>
+									</td>
+									<td class="completeComputer<%=i%>">0</td>
+									<td class="completeComputer-progress<%=i%>"><%=i + 1%>번 라인
+										<br>숙지사항 확인</td>
+									<input type="hidden" name="endProTime<%=i %>">
+								</tr>
+							</tbody>
+						</table>
+						<%
+						} catch (Exception e) {
+						%>
+						<table class="process-chart-time-table3">
+							<thead>
+								<tr>
+									<th>일시</th>
+									<th>완성된 컴퓨터 수</th>
+									<th>진행상황</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+								</tr>
+							</tbody>
+						</table>
+						<%
+						}
+						}
+						%>
+					</form>
 				</div>
 			</section>
 		</div>
 		<footer>ⓒ2024 J.company System</footer>
 	</div>
-</form>
 
 
-<script>
+	<script>
 //현재 로그인한 등급( 작업자 / 관리자 )
-let userRole = '<%=role %>'; 
+let userRole = '<%=role%>'; 
 
 document.addEventListener("DOMContentLoaded", function () {
     // 공통 스크립트 : 나중에 공동파일로 관리할 예정
@@ -387,28 +458,94 @@ document.addEventListener("DOMContentLoaded", function () {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    // 그림 파트
 
     // DB에 연결해서 재고는 마이너스처리; 완품은 플러스처리
-    // 불량품도 부품과 완품으로 나눠서 DB 연결
-    let completComNum = 0;
-    let completeComputer = document.querySelector(".completeComputer");
-    setInterval(() => {
-        completComNum++;
-        console.log("completComNum : " + completComNum);
-        completeComputer.innerHTML = completComNum;
-    }, 27000);
+    // 불량품도 부품과 완품으로 나눠서 DB 연결\
+    let isFinished = [false, false, false];
+    
+    <%for (int i = 0; i < 3; i++) {%>
+	    let completComNum<%=i%> = 0; 	// 통과
+	    let failComNum<%=i%> = 0;		// 불량
+	    let completeComputer<%=i%> = document.querySelector(".completeComputer<%=i%>");
+	    let comProgress<%=i%> = document.querySelector(".completeComputer-progress<%=i%>");
+	    let interval<%=i%> = setInterval(() => {
+	    	if(Math.random() > 0.05) {
+		        completComNum<%=i%>++;
+		        console.log("completComNum<%=i%> : " + completComNum<%=i%>);
+		        completeComputer<%=i%>.innerHTML = completComNum<%=i%>;    		
+	    	} else {
+	    		failComNum<%=i%>++;
+	    		console.log("불량 : " + failComNum<%=i%>);
+		        completeComputer<%=i%>.innerHTML = "<h4 style='color: red'>!!불량!!</hr>";    		    		
+	    	}
+	    	
+	    	let textElements = document.querySelectorAll(".treecircle2");
+	    	let textNums = [];
+	    	for (let i = 0; i < textElements.length; i++) {
+	    	    let textStr = textElements[i].textContent;
+	    	    let textNum = parseInt(textStr.match(/\d+/)[0]);
+	    	    textNums.push(textNum);
+	    	}
+	    	
+		    if((completComNum<%=i%> + failComNum<%=i%>) == textNums[<%=i%>]) {
+		    	clearInterval(interval<%=i%>);
+		    	completeComputer<%=i%>.innerHTML = "통과 : " + completComNum<%=i%> + "<br>불량 : " + failComNum<%=i%>
+		    										+ "<input type='hidden' name='pass<%=i%>' value='" + completComNum<%=i%> + "'>" 
+		    										+ "<input type='hidden' name='fail<%=i%>' value='" + failComNum<%=i%> + "'>";
+		    	comProgress<%=i%>.innerHTML = "종료";
+		    	
+		    	isFinished[<%=i%>] = true; // interval 종료 상태 변경
+		    	
+		    	
+		    	var nowTime = Date.now(); 
 
+		        // 밀리초를 Date 객체로 변환
+		        var currentTime = new Date(nowTime);
+		
+		        // 원하는 형식의 문자열로 변환
+		        var endTime = currentTime.toISOString().replace("T", " ").split(".")[0]; // ISO 형식에서 "T" 제거 및 밀리초 제거
+		        console.log(endTime); // 종료시간 출력
+		        document.querySelector("input[name='endProTime<%=i%>']").value = endTime;
+		        
+		    }
+		    
+		    let allFinish = isFinished.every(function(finished) {
+		        return finished; // 각 요소가 true일 때만 true를 반환합니다.
+		    });
+
+		    if (allFinish) {
+	            document.getElementById("myForm").submit();
+		    }
+		    
+	    }, 500);
+	<%
+	}
+	%>
 
     // 공정 라인 버튼 색깔만 바뀌게 - DB 에는 실제로 라인 4개 형성해서 보여지는 스크립트 추가하기
-    <%
-    for(int i=1; i<list.size(); i++) {
-    %>
-    	document.querySelector('.treeProcess<%= i%>').style.display = "none";
-    <%
-    }
-    %>
+    <%for (int i = 1; i < list.size(); i++) {%>
+    	document.querySelector('.treeProcess<%=i%>').style.display = "none";
+    <%}%>
 
+    <%for (int i = 0; i < map.size(); i++) {
+	if (i % 3 == 2) {%>
+		    
+    		for(let j = 0; j < document.querySelectorAll(".treeGo<%=i%>").length; j++) {
+    			document.querySelectorAll(".treeGo<%=i%>")[j].style.display = "none";
+			
+    		}
+    <%}
+}
+
+if (map.size() > 9) {%>
+    		document.querySelector(".treeLine3").style.display = "block";
+   	<%}%>
+   	
+   	document.querySelector('.process-chart-time-table0').style.display = "table";
+    document.querySelector('.process-chart-time-table1').style.display = "none";
+    document.querySelector('.process-chart-time-table2').style.display = "none";
+    document.querySelector('.process-chart-time-table3').style.display = "none";
+    
     
     document.querySelector('.tree-graph-line-title1').addEventListener("click", () => {
         document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#aaa";
@@ -419,8 +556,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.treeProcess0').style.display = "block";
         document.querySelector('.treeProcess1').style.display = "none";
         document.querySelector('.treeProcess2').style.display = "none";
-        document.querySelector('.treeProcess3').style.display = "none";
         
+        document.querySelector('.process-chart-time-table0').style.display = "table";
+        document.querySelector('.process-chart-time-table1').style.display = "none";
+        document.querySelector('.process-chart-time-table2').style.display = "none";
+        document.querySelector('.process-chart-time-table3').style.display = "none";
     });
     
     document.querySelector('.tree-graph-line-title2').addEventListener("click", () => {
@@ -432,7 +572,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.treeProcess0').style.display = "none";
         document.querySelector('.treeProcess1').style.display = "block";
         document.querySelector('.treeProcess2').style.display = "none";
-        document.querySelector('.treeProcess3').style.display = "none";
+        
+        document.querySelector('.process-chart-time-table0').style.display = "none";
+        document.querySelector('.process-chart-time-table1').style.display = "table";
+        document.querySelector('.process-chart-time-table2').style.display = "none";
+        document.querySelector('.process-chart-time-table3').style.display = "none";
     });
     
     document.querySelector('.tree-graph-line-title3').addEventListener("click", () => {
@@ -444,7 +588,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.treeProcess0').style.display = "none";
         document.querySelector('.treeProcess1').style.display = "none";
         document.querySelector('.treeProcess2').style.display = "block";
-        document.querySelector('.treeProcess3').style.display = "none";
+        
+        document.querySelector('.process-chart-time-table0').style.display = "none";
+        document.querySelector('.process-chart-time-table1').style.display = "none";
+        document.querySelector('.process-chart-time-table2').style.display = "table";
+        document.querySelector('.process-chart-time-table3').style.display = "none";
     });
     
     document.querySelector('.tree-graph-line-title4').addEventListener("click", () => {
@@ -456,8 +604,14 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('.treeProcess0').style.display = "none";
         document.querySelector('.treeProcess1').style.display = "none";
         document.querySelector('.treeProcess2').style.display = "none";
-        document.querySelector('.treeProcess3').style.display = "block";
+        
+        document.querySelector('.process-chart-time-table0').style.display = "none";
+        document.querySelector('.process-chart-time-table1').style.display = "none";
+        document.querySelector('.process-chart-time-table2').style.display = "none";
+        document.querySelector('.process-chart-time-table3').style.display = "table";
     });
+    
+   
 
 
     // 모바일 대응 스크립트
@@ -477,8 +631,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 // 관리자
                 for (let i = 0; i < ulLi.length; i++) {
                     ulLi[i].style.padding = '7px';
-                    // ulLi[i].style.margin = '0px';
-
                 }
                 menuBar.prepend(myPage);
             }
@@ -490,6 +642,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#workerName").addEventListener("click", () => {
         window.open("myPage.html", '_blank', 'width = 630, height = 470, top=100, left=100');
     });
+    
+   
 })
 </script>
 </body>
