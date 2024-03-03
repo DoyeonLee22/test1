@@ -107,8 +107,10 @@ document.querySelector("#clearWrite").addEventListener("click", () => {
 	let nowYear = todayTime.getFullYear() % 100;
 	let nowMonth = ('0' + (todayTime.getMonth() + 1)).slice(-2);
 	let nowDate = ('0' + todayTime.getDate()).slice(-2);
+	
 	let nowHour = ('0' + todayTime.getHours()).slice(-2);
 	let nowMin = ('0' + todayTime.getMinutes()).slice(-2);
+	
 	wdate = nowYear + "-" + nowMonth + "-" + nowDate;
 
 	document.querySelector("#nowTime").value = wdate;
@@ -201,9 +203,6 @@ function countPlus(seq) {
 	xhr.send();
 }
 
-
-
-
 closeModalBtn.addEventListener("click", function() {
 	modal.style.display = "none";
 	modal.style.pointerEvents = "none";
@@ -226,8 +225,10 @@ window.addEventListener("click", function(event) {
 
 
 function deletePost(seq) {
-	// 삭제할 게시물 번호를 서블릿으로 전송
-	window.location.href = "dod?seq=" + seq;
+	let boardTypeName = document.querySelector('input[name="boardType"]');
+	let boardType = boardTypeName.value;
+	console.log("boardType : " + boardType);
+	window.location.href = "dod?seq=" + seq + "&boardType=" + boardType;
 }
 
 function fnNumSend() {

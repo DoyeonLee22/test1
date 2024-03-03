@@ -1,8 +1,4 @@
-
-
 document.addEventListener("DOMContentLoaded", function () {
-
-
     // 공통 스크립트 : 나중에 공동파일로 관리할 예정
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const hover = document.querySelectorAll('a.hover');

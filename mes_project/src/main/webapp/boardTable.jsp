@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
-<%@ page import="jjh.BoardDTO"%>
+<%@ page import="board.free.BoardDTO"%>
 <%@ page import="java.time.LocalDateTime"%>
 <%@ page import="java.time.format.DateTimeFormatter"%>
 
@@ -58,7 +58,7 @@
 				<image src="${pageContext.request.contextPath}/images/bee_happy.png"
 					class="workerPic">
 			</div>
-			<span id="workerName"><span class="workerGrade"><%=displayGrade%><br></span>${sessionScope.name}</span>
+			<span id="workerName"><%=displayGrade%><br>${sessionScope.name}</span>
 		</div>
 	</div>
 
@@ -121,7 +121,7 @@
 					<%
 					if ("ADMIN".equals(role)) {
 					%>
-					<div class="menu-bar-content" id="adminNav">
+					<div class="menu-bar-content">
 						<ul>
 							<li><a href="Employee_managemen.html">직원목록</a></li>
 							<li><a href="work-record.html">근무기록</a></li>
@@ -133,9 +133,9 @@
 					%>
 					<div class="menu-bar-content">
 						<ul>
-							<li><a href="boardTable.html">자유게시판</a></li>
-							<li><a href="suggestTable.html">건의사항</a></li>
-							<li><a href="QA.html">Q&A</a></li>
+							<li><a href="dot?boardType=자유게시판">자유게시판</a></li>
+							<li><a href="dot?boardType=건의게시판">건의사항</a></li>
+							<li><a href="dot?boardType=QaA게시판">Q&A</a></li>
 						</ul>
 					</div>
 				</div>
@@ -144,9 +144,9 @@
 		<div class="aside-section-container">
 			<aside>
 				<ul>
-					<li><a href="boardTable.html">자유게시판</a></li>
-					<li><a href="suggestTable.html">건의사항</a></li>
-					<li><a href="QA.html">Q&A</a></li>
+					<li><a href="dot?boardType=자유게시판">자유게시판</a></li>
+					<li><a href="dot?boardType=건의게시판">건의사항</a></li>
+					<li><a href="dot?boardType=QaA게시판">Q&A</a></li>
 				</ul>
 			</aside>
 			<section>
@@ -178,6 +178,7 @@
 							for (int i = 0; i < list.size(); i++) {
 								BoardDTO board = (BoardDTO) list.get(i);
 
+								String boardType = board.getBoardType();
 								int seq = board.getSeq();
 								String userDBId = board.getUserId();
 								String num = board.getNum();
@@ -238,6 +239,8 @@
 							</div>
 							<table id="writeTable">
 								<tr>
+									<td style="display: none"><input type="text" name="boardType"
+										value="자유게시판"></td>
 									<td style="display: none"><input type="text" name="num"
 										value="1"></td>
 									<td style="display: none"><input type="text" name="writer"
@@ -326,7 +329,9 @@
 				
 	            delBtn2nd.onclick = function() {
 	            	console.log("seqValue2 : " + seqValue);
-	            	window.location.href = "dod?seq=" + seqValue;
+	            	let boardTypeName = document.querySelector('input[name="boardType"]');
+	            	let boardType = boardTypeName.value;
+	            	window.location.href = "dod?seq=" + seqValue + "&boardType=" + boardType;
 	            	console.log("seqValue2 : " + seqValue);
 	            };
 			})

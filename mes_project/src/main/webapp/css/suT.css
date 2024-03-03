@@ -17,6 +17,31 @@ body {
     color: #333;
     background-color: #ccc;
 }
+.hiddenTd {
+	display: none;
+}
+#deleteWriteBtn, #deleteWriteBtn2 {
+	display: inline-block;
+	background-color: red;
+    margin-top: 10px;
+    width: 80px;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    border: 0;
+    margin-left: 600px;
+}
+
+#deleteWriteBtn2 {
+	display: none;
+	
+}
+
+#deleteWriteBtn:hover, #deleteWriteBtn2:hover {
+	background-color: rgb(163, 6, 6);
+    transition: 0.2s;
+}
 
 /* 햄버거 메뉴 아이콘 */
 .hamburger-menu {
@@ -57,13 +82,6 @@ body {
     color: #000;
 }
 
-#mainTitle1 {
-    display: none;
-}
-
-#mainTitle2 {
-    display: none;
-}
 
 #myPage {
     width: 200px;
@@ -401,7 +419,7 @@ td {
     margin-top: 100px;
 }
 
-.tdTitle:hover {
+.tableTdTitle:hover {
     text-decoration: underline;
     cursor: pointer;
 }
@@ -455,6 +473,8 @@ td {
     border: 1px solid #555;
     text-align: center;
     margin: auto;
+    width: 86%;
+    box-sizing: border-box;
 }
 
 #readTable input {
@@ -474,9 +494,15 @@ td {
     text-align: left;
 }
 
-#readTable th,
-td {
-    border: 1px solid #555;
+#readTable td {
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+#readTable th {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
 }
 
 #deleteBtn:hover {
@@ -503,20 +529,8 @@ section div h2 {
     display: none;
 }
 
-#mainTitle1 {
-    display: none;
-}
 
-#mainTitle1 a {
-    text-decoration: none;
-    color: #333;
-}
-
-#mainTitle2 {
-    display: none;
-}
-
-#mainTitle2 a {
+#mainTitle a {
     text-decoration: none;
     color: #333;
 }
@@ -540,6 +554,29 @@ section div h2 {
     margin-top: 100px;
     text-align: right;
     margin-right: 30px;
+}
+#noticeWriteBtn,
+#resetWrite,
+#deleteBtn,
+#noticeResetWrite,
+#delBtn {
+    background-color: red;
+    margin-top: 10px;
+    width: 80px;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    border: 0;
+}
+
+#noticeWriteBtn:hover,
+#resetWrite:hover,
+#deleteBtn:hover,
+#noticeResetWrite:hover,
+#delBtn:hover {
+    background-color: rgb(163, 6, 6);
+    transition: 0.2s;
 }
 
 /* 모바일 페이지 대응 테스트 */

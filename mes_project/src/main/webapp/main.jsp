@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
+<%@ page import="board.free.BoardDTO" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -96,11 +98,9 @@
 					</div>
 					<div class="menu-bar-content">
 						<ul>
-							<li><a href="facilityMonitoring.html">설비 모니터링</a></li>
-
-							<li><a href="process.html">공정도</a></li>
-
-							<li><a href="facilitiespage.html">설비 설정</a></li>
+							<li><a href="monitoring.jsp">설비 모니터링</a></li>
+							<li><a href="monitor">공정도</a></li>
+							<li><a href="grade">설비 설정</a></li>
 						</ul>
 					</div>
 					<div class="menu-bar-content">
@@ -127,9 +127,9 @@
 					%>
 					<div class="menu-bar-content">
 						<ul>
-							<li><a href="dot">자유게시판</a></li>
-							<li><a href="suggestTable.html">건의사항</a></li>
-							<li><a href="QA.html">Q&A</a></li>
+							<li><a href="dot?boardType=자유게시판">자유게시판</a></li>
+							<li><a href="dot?boardType=건의게시판">건의사항</a></li>
+							<li><a href="dot?boardType=QaA게시판">Q&A</a></li>
 						</ul>
 					</div>
 				</div>
@@ -215,45 +215,42 @@
 						</div>
 					</div>
 					<div class="card">
-						<div class="card-header">건의사항</div>
-						<div class="card-content">
-							<div class="list">
-								<!-- row는 행임 제목 영역에 제목 -->
-								<div class="row">
-									<div class="cell">번호</div>
-									<div class="cell">제목</div>
-									<div class="cell">작성일</div>
-									<div class="cell">답변</div>
+						<a href="suggestTable.html" style="text-decoration: none; color: inherit;">
+							<div class="card-header">건의사항</div>
+							<div class="card-content">
+								<div class="list">
+									<!-- row는 행임 제목 영역에 제목 -->
+									<div class="row">
+										<div class="cell">번호</div>
+										<div class="cell">제목</div>
+										<div class="cell">작성일</div>
+										<div class="cell">답변</div>
+									</div>
+									<%
+									List<BoardDTO> list = (List<BoardDTO>) request.getAttribute("list");
+									System.out.println("list.size() : " + list.size());
+									for (int i = 0; i < list.size(); i++) {
+										BoardDTO board = (BoardDTO) list.get(i);
+	
+										int seq = board.getSeq();
+										String title = board.getTitle();
+										Date wDate = board.getWdate();
+									%>
+									<div class="row">
+										<div class="cell"><%=seq %></div>
+										<div class="cell"><%=title %></div>
+										<div class="cell"><%=wDate %></div>
+										<div class="cell">X</div>
+									</div>
+									<%
+									}
+									%>
 								</div>
-								<div class="row">
-									<div class="cell">101</div>
-									<div class="cell">이도연 도망감</div>
-									<div class="cell">암튼어제</div>
-									<div class="cell">O</div>
-								</div>
-								<div class="row">
-									<div class="cell">103</div>
-									<div class="cell">untitle</div>
-									<div class="cell">Date</div>
-									<div class="cell">?</div>
-								</div>
-								<div class="row">
-									<div class="cell">104</div>
-									<div class="cell">untitle</div>
-									<div class="cell">Date</div>
-									<div class="cell">?</div>
-								</div>
-								<div class="row">
-									<div class="cell">107</div>
-									<div class="cell">untitle</div>
-									<div class="cell">Date</div>
-									<div class="cell">?</div>
-								</div>
+	
+									
+	
 							</div>
-							<div class="more">
-								<a href="suggestTable.html">더보기</a>
-							</div>
-						</div>
+						</a>
 					</div>
 					<div class="card">
 						<a href="vacation.html" id="vacationLink"

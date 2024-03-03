@@ -1,216 +1,496 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Process Page</title>
-<link rel="stylesheet" href="process.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process Page</title>
+<link rel="stylesheet" href="css/process.css">
 
 </head>
 
 <body>
-    <form name="frm">
-        <div id="workerTitle">
-            <div id="workerLogo">
-                <a href="#">
-                    <image
-                        src="https://cdn.discordapp.com/attachments/1185161279804026893/1200675420325036082/Jlogo.png?ex=65c70b1f&is=65b4961f&hm=ae28f53e9280fe71cffc1fc2ca74aec892875f13143ef4e109da28023c5b414b&"
-                        class="logo"></image>
-                </a>
-            </div>
-            <h1 id="mainTitle1"><a href="main.html">작업자 페이지</a></h1>
-            <h1 id="mainTitle2"><a href="main.html">관리자 페이지</a></h1>
-            <div id="myPage">
-                <div id="myPageLogo">
-                    <image
-                        src="https://cdn.discordapp.com/attachments/1185161279804026893/1200675420551520370/workerP.jpg?ex=65c70b1f&is=65b4961f&hm=c49f91b245305c4bb33c58e626bc4960b4f601257e433425a8d7cc0da454126e&"
-                        class="workerPic">
-                </div>
-                <span id="workerName"><span class="workerGrade">관리자<br></span>이도연 대리님</span>
-            </div>
-        </div>
+	<%
+	// 세션에서 권한 정보 가져오기
+	session = request.getSession(false);
+	String role = null;
+	String userId = null;
+	if (session != null) {
+		role = (String) session.getAttribute("role");
+		userId = (String) session.getAttribute("user");
+	}
+	System.out.println("----------------------------------------------------");
+	System.out.println("session : " + session);
+	System.out.println("role : " + role);
+	System.out.println("userId : " + userId);
 
-        <div class="wrap">
-            <div class="header-nav-container">
-                <header>
-                    <!-- 모바일 헤더 코드 -->
-                    <div class="header-content">
-                        <div class="hamburger-menu">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <h1 id="headerTitle" style="display: none;"><a href="main.html">J.company</a></h1>
-                    </div>
-                    <ul>
-                        <li><a href="work-order.html" class="hover" title="작업지시서">작업</a></li>
-                        <li><a href="facilityMonitoring.html" class="hover" title="품질검사">설비</a></li>
-                        <li><a href="stock_status.html" class="hover" title="건의사항">재고관리</a></li>
-                        <li id="adminTitle"><a href="Employee_managemen.html" class="hover" title="직원관리">직원관리</a></li>
-                        <li><a href="boardTable.html" class="hover" title="직원 게시판">게시판</a></li>
-                    </ul>
-                </header>
-                <nav>
-                    <div class="menu-bar">
-                        <div class="menu-bar-content">
-                            <ul>
-                                <li><a href="work-order.html">작업 지침서</a></li>
-                                <li><a href="work-safety.html">안전 지침서</a></li>
-                                <li><a href="work-quality.html">품질검사</a></li>
-                                <li><a href="work-report.html">작업보고</a></li>
-                            </ul>
-                        </div>
-                        <div class="menu-bar-content">
-                            <ul>
-                                <li><a href="facilityMonitoring.html">설비 모니터링</a></li>
+	String displayGrade = "잘못된 접근";
+	String displayTitle = "잘못된 접근";
+	if ("ADMIN".equals(role)) {
+		displayGrade = "관리자";
+		displayTitle = "관리자 페이지";
+	} else if ("WORKER".equals(role)) {
+		displayGrade = "작업자";
+		displayTitle = "작업자 페이지";
+	}
+	%>
+	<div id="workerTitle">
+		<div id="workerLogo">
+			<a href="#"> <image
+					src="${pageContext.request.contextPath}/images/logo.png"
+					class="logo"></image>
+			</a>
+		</div>
+		<h1 id="mainTitle">
+			<a href="main.jsp"><%=displayTitle%></a>
+		</h1>
+		<div id="myPage">
+			<div id="myPageLogo">
+				<image src="${pageContext.request.contextPath}/images/bee_happy.png"
+					class="workerPic">
+			</div>
+			<span id="workerName"><%=displayGrade%><br>${sessionScope.name}</span>
+		</div>
+	</div>
 
-                                <li><a href="process.html">공정도</a></li>
+	<div class="wrap">
+		<div class="header-nav-container">
+			<header>
+				<!-- 모바일 헤더 코드 -->
+				<div class="header-content">
+					<div class="hamburger-menu">
+						<span></span> <span></span> <span></span>
+					</div>
+					<h1 id="headerTitle" style="display: none;">
+						<a href="main.html">J.company</a>
+					</h1>
+				</div>
+				<ul>
+					<li><a href="work-order.html" class="hover" title="작업지시서">작업</a></li>
+					<li><a href="facilityMonitoring.html" class="hover"
+						title="품질검사">설비</a></li>
+					<li><a href="stock_status.html" class="hover" title="건의사항">재고관리</a></li>
+					<%
+					if ("ADMIN".equals(role)) {
+					%>
+					<li id="adminTitle"><a href="Employee_managemen.html"
+						class="hover" title="직원관리">직원관리</a></li>
+					<%
+					}
+					%>
+					<li><a href="boardTable.html" class="hover" title="직원 게시판">게시판</a></li>
+				</ul>
+			</header>
+			<nav>
+				<div class="menu-bar">
+					<div class="menu-bar-content">
+						<ul>
+							<li><a href="work-order.html">작업 지침서</a></li>
+							<li><a href="work-safety.html">안전 지침서</a></li>
+							<li><a href="work-quality.html">품질검사</a></li>
+							<li><a href="work-report.html">작업보고</a></li>
+						</ul>
+					</div>
+					<div class="menu-bar-content">
+						<ul>
+							<li><a href="monitoring.jsp">설비 모니터링</a></li>
+							<li><a href="process.html">공정도</a></li>
+							<li><a href="grade">설비 설정</a></li>
+						</ul>
+					</div>
+					<div class="menu-bar-content">
+						<ul>
+							<li><a href="stock_status.html">재고 현황</a></li>
+							<li><a href="Stock_Request.html">재고 신청</a></li>
+							<li><a href="Finished_product_management.html">완제품 관리</a></li>
+							<li><a href="Report_of_defective_inventory.html">재고 불량
+									신고</a></li>
+						</ul>
+					</div>
+					<div class="menu-bar-content" id="adminNav">
+						<ul>
+							<li><a href="Employee_managemen.html">직원목록</a></li>
+							<li><a href="work-record.html">근무기록</a></li>
+							<li><a href="vacation.html">휴가신청</a></li>
+						</ul>
+					</div>
+					<div class="menu-bar-content">
+						<ul>
+							<li><a href="dot?boardType=자유게시판">자유게시판</a></li>
+							<li><a href="dot?boardType=건의게시판">건의사항</a></li>
+							<li><a href="dot?boardType=QaA게시판">Q&A</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="aside-section-container">
+			<aside>
+				<ul>
+					<li><a href="FacilityMonitoring.html">설비 모니터링</a></li>
+					<li><a href="process.html">공정도</a></li>
+					<li><a href="facilitiespage.html">설비설정</a></li>
+				</ul>
+			</aside>
+			<section>
+				<h1 style="text-align: center; font-size: 30px; margin-top: 40px">공정도</h1>
+				<div class="process-chart">
+					<div id="section-nav">
+						<%
+						List<List> list = (List<List>)request.getAttribute("list");
+						for(int i=1; i<=4; i++) {
+						%>
+						<div class="tree-graph-line-title<%=i %>"><%=i %>번 라인</div>
+						<%
+						}
+						%>
+					</div>
+					
+					<div id="treeLine">
+						<div class="tree-line1"></div>
+						<div class="tree-line2"></div>
+					
 
-                                <li><a href="facilitiespage.html">설비 설정</a></li>
-                            </ul>
-                        </div>
-                        <div class="menu-bar-content">
-                            <ul>
-                                <li><a href="stock_status.html">재고 현황</a></li>
-                                <li><a href="Stock_Request.html">재고 신청</a></li>
-                                <li><a href="Finished_product_management.html">완제품 관리</a></li>
-                                <li><a href="Report_of_defective_inventory.html">재고 불량 신고</a></li>
-                            </ul>
-                        </div>
-                        <div class="menu-bar-content" id="adminNav">
-                            <ul>
-                                <li><a href="Employee_managemen.html">직원목록</a></li>
-                                <li><a href="work-record.html">근무기록</a></li>
-                                <li><a href="vacation.html">휴가신청</a></li>
-                            </ul>
-                        </div>
-                        <div class="menu-bar-content">
-                            <ul>
-                                <li><a href="boardTable.html">자유게시판</a></li>
-                                <li><a href="suggestTable.html">건의사항</a></li>
-                                <li><a href="QA.html">Q&A</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-            <div class="aside-section-container">
-                <aside>
-                    <ul>
-                        <li>
-                            <a href="FacilityMonitoring.html">설비 모니터링</a>
-                        </li>
-                        <li>
-                            <a href="process.html">공정도</a>
+						<%
+						
+						System.out.println("list 크기 : " + list.size()); // 3
+						for(int i=0; i<list.size(); i++) {
+							List monitor = list.get(i);
+							
+							List map = new ArrayList();
+							
+							System.out.println("monitor 크기 : " + monitor.size()); // 10
+	
+							if(monitor.get(0) instanceof Number) {
+								map.add(monitor.get(0) + "번 라인 점검");
+							}
+							
+							if("1".equals(monitor.get(1))) {
+								map.add("퍼포먼스 등급");
+							} else if("2".equals(monitor.get(1))) {
+								map.add("메인스트림 등급");								
+							} else if("3".equals(monitor.get(1))) {
+								map.add("엔트리 등급");								
+							}
+							
+							int count = (int)monitor.get(2);
+							map.add("생산개수 : " + count + "개");
+							
+							map.add("수정사항 확인");
+							
+							String gpu = (String)monitor.get(3);
+							if(gpu.indexOf("RTX 4080TI") >= 0) {
+								map.add("RTX 4080TI");
+							} else if(gpu.indexOf("RX 6800 XT") >= 0) {
+								map.add("RX 6800 XT");								
+							} else if(gpu.indexOf("GTX 1660 Ti") >= 0) {
+								map.add("GTX 1660 Ti");																
+							}
+							
+							String ssd = (String)monitor.get(4);
+							if(ssd.indexOf("4TB") >= 0) {
+								map.add("4TB SSD");
+							} else if(ssd.indexOf("1TB") >= 0) {
+								map.add("1TB SSD");								
+							} else if(ssd.indexOf("500GB") >= 0) {
+								map.add("500GB SSD");																
+							}
+							
+							String ram = (String)monitor.get(5);
+							if(ram.indexOf("32GB") >= 0) {
+								map.add("32GB RAM");
+							} else if(ram.indexOf("16GB") >= 0) {
+								map.add("16GB RAM");
+							} else if(ram.indexOf("8GB") >= 0) {
+								map.add("8GB RAM");
+							}
+							
+							String cpu = (String)monitor.get(6);
+							if(cpu.indexOf("O9") >= 0) {
+								map.add("O9-14900K");
+							} else if(cpu.indexOf("O5") >= 0) {
+								map.add("O5-14500");
+							} else if(cpu.indexOf("O3") >= 0) {
+								map.add("O3-14100");
+							}
+							
+							String cool = (String)monitor.get(7);
+							if(cool.indexOf("Noctua NH-D15 Cooler") >= 0) {
+								map.add("Noctua NH-D15");
+							} else if(cool.indexOf("RGB Platinum Cooler") >= 0) {
+								map.add("RGB Platinum");
+							} else if(cool.indexOf("Black Edition Cooler") >= 0) {
+								map.add("Black Edition");
+							} 
+							
+							String main = (String)monitor.get(8);
+							if(main.indexOf("AZUZ") >= 0) {
+								map.add("AZUZ Z590-E");
+							} else if(main.indexOf("TERABYTE") >= 0) {
+								map.add("TERABYTE A520M");
+							} else if(main.indexOf("MZI") >= 0) {
+								map.add("MZI B550");
+							} 
+							
+							String power = (String)monitor.get(9);
+							if(power.indexOf("1000W") >= 0) {
+								map.add("1000W 파워");
+							} else if(power.indexOf("850W") >= 0) {
+								map.add("850W 파워");
+							} else if(power.indexOf("550W") >= 0) {
+								map.add("550W 파워");
+							}
+							
+							map.add("조립 검토");
+						%>
+							<div class="treeProcess<%=i %>">
+							<%
+							System.out.println("map.size : " + map.size());
+							for(int j = 0; j < map.size(); j++) {
+							System.out.println(j + "번 인덱스 map 내용 : " + map.get(j));								
+								if(!"Default".equals(map.get(j)) || "수정사항 확인".equals(map.get(j)) || "조립 검토".equals(map.get(j))) {
+								System.out.println(j + "번 인덱스 map 내용 : " + map.get(j) + "if문");								
+									if(j < 3) {
+							%>
+										<div class="treecircle<%=j %>" style="line-height: 150px;background-color: red; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; top: -13%; left: calc(<%=(j+1)*30 %>% - 150px) "><%=map.get(j) %></div>
+							<%
+									} else if(j >= 3 && j < 6 ) {
+							%>	
+										<div class="treecircle<%=j %>" style="line-height: 150px;background-color: red; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; top: 34%; left: calc(<%=180 - (j*30) %>% - 150px)"><%=map.get(j) %></div>	
+							<%	
+									} else if(j >= 6) {
+							%>
+										<div class="treecircle<%=j %>" style="line-height: 150px;background-color: red; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; top: 82%; left: calc(<%=(j-5)*30 %>% - 150px)"><%=map.get(j) %></div>	
+							<% 
+									}
+								}
+							}
+							%>
+							</div>	
+						<%
+						}
+						%>
+					</div>
 
-                        </li>
-                        <li>
-                            <a href="facilitiespage.html">설비설정</a>
-                        </li>
-                    </ul>
-                </aside>
-                <section>
-                    <h1 style="text-align: center; font-size: 30px; margin-top: 40px">공정도</h1>
-                    <div class="process-chart">
-                        <div id="section-nav">
-                            <div class="tree-graph-line-title1">1번라인 공정도</div>
-                            <div class="tree-graph-line-title2">2번라인 공정도</div>
-                            <div class="tree-graph-line-title3">3번라인 공정도</div>
-                            <div class="tree-graph-line-title4">4번라인 공정도</div>
-                        </div>
-                        <div class="tree-line1">
-                        </div>
-                        <div class="tree-line2">
-                        </div>
+					<table class="process-chart-time-table">
+						<thead>
+							<tr>
+								<th>일시</th>
+								<th>완성된 컴퓨터 수</th>
+								<th>진행상황</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>2024-02-02<br>
+								<br> 시작시간 : 09 : 00<br> <!-- 설비설정을 누른 시간 --> 현재시간 : 14
+									: 06
+								</td>
+								<td class="completeComputer">0</td>
+								<td class="completeComputer-progress">설계 확인중</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+		</div>
+		<footer>ⓒ2024 J.company System</footer>
+	</div>
+</form>
 
-                        <div class="tree-graph-circle1">설계 확인</div>
-                        <div class="tree-graph-circle2">자재 확인</div>
-                        <div class="tree-graph-circle3">그래픽카드 조립</div>
 
-                        <div class="tree-graph-circle4">저장장치 조립</div>
-                        <div class="tree-graph-circle5">메모리 조립</div>
-                        <div class="tree-graph-circle6">조립 검사</div>
+<script>
+//현재 로그인한 등급( 작업자 / 관리자 )
+let userRole = '<%=role %>'; 
 
-                        <div class="tree-graph-circle7">품질 검사</div>
-                        <div class="tree-graph-circle8">포장</div>
-                        <div class="tree-graph-circle9">출하</div>
+document.addEventListener("DOMContentLoaded", function () {
+    // 공통 스크립트 : 나중에 공동파일로 관리할 예정
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const hover = document.querySelectorAll('a.hover');
+    const menuBar = document.querySelector('.menu-bar');
+    const nav = document.querySelector('nav');
+    const wrap = document.querySelector('.wrap');
 
-                        <div class="tree-graph-bar1">
-                            <image width="30" height="30"
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201801919757029427/pngwing.com_1.png?ex=65cb2442&is=65b8af42&hm=587c52877b6d903462980dbd8103a16072852811f563d2fdfcdf8da3cb0dceec&">
-                            </image>
-                        </div>
-                        <div class="tree-graph-bar2">
-                            <image width="30" height="30"
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201801919757029427/pngwing.com_1.png?ex=65cb2442&is=65b8af42&hm=587c52877b6d903462980dbd8103a16072852811f563d2fdfcdf8da3cb0dceec&">
-                            </image>
-                        </div>
+    // 모바일 스크립트 코드
+    const hamburgerMenu = document.querySelector('.hamburger-menu');
+    const myPage = document.querySelector('#myPage');
 
-                        <div class="tree-graph-bar3">
-                            <image width="30" height="30"
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201801919757029427/pngwing.com_1.png?ex=65cb2442&is=65b8af42&hm=587c52877b6d903462980dbd8103a16072852811f563d2fdfcdf8da3cb0dceec&">
-                            </image>
-                        </div>
-                        <div class="tree-graph-bar4">
-                            <image width="30" height="30"
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201801919757029427/pngwing.com_1.png?ex=65cb2442&is=65b8af42&hm=587c52877b6d903462980dbd8103a16072852811f563d2fdfcdf8da3cb0dceec&">
-                            </image>
-                        </div>
-                        <div class="tree-graph-bar5">
-                            <image width="30" height="30"
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201801919757029427/pngwing.com_1.png?ex=65cb2442&is=65b8af42&hm=587c52877b6d903462980dbd8103a16072852811f563d2fdfcdf8da3cb0dceec&">
-                            </image>
-                        </div>
-                        <div class="tree-graph-bar6">
-                            <image width="30" height="30"
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201801919757029427/pngwing.com_1.png?ex=65cb2442&is=65b8af42&hm=587c52877b6d903462980dbd8103a16072852811f563d2fdfcdf8da3cb0dceec&">
-                            </image>
-                        </div>
-                        <div class="tree-graph-bar7">
-                            <image width="30" height="30"
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201801919757029427/pngwing.com_1.png?ex=65cb2442&is=65b8af42&hm=587c52877b6d903462980dbd8103a16072852811f563d2fdfcdf8da3cb0dceec&">
-                            </image>
-                        </div>
-                        <div class="tree-graph-bar8">
-                            <image width="30" height="30"
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201801919757029427/pngwing.com_1.png?ex=65cb2442&is=65b8af42&hm=587c52877b6d903462980dbd8103a16072852811f563d2fdfcdf8da3cb0dceec&">
-                            </image>
-                        </div>
+    hamburgerMenu.addEventListener('click', function () {
+        nav.classList.toggle('active');
 
-                        <table class="process-chart-time-table">
-                            <thead>
-                                <tr>
-                                    <th>일시</th>
-                                    <th>완성된 컴퓨터 수</th>
-                                    <th>진행상황</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2024-02-02<br><br>
-                                        시작시간 : 09 : 00<br> <!-- 설비설정을 누른 시간 -->
-                                        현재시간 : 14 : 06
-                                    </td>
-                                    <td class="completeComputer">0</td>
-                                    <td class="completeComputer-progress">
-                                        설계 확인중
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="toggleDiv">
-                        <button type="button" id="toggle">토글</button>
-                    </div>
-                </section>
-            </div>
-            <footer>ⓒ2024 J.company System</footer>
-        </div>
-    </form>
+        if (nav.classList.contains('active')) {
+            nav.prepend(myPage);
+            myPage.style.display = 'flex';
+            myPage.style.padding = '5px 0';
+            myPage.style.backgroundColor = '#dde';
+
+            let sectionHeight = section.offsetHeight;
+            nav.style.height = `${sectionHeight}px`;
+        } else {
+            workerTitle.appendChild(myPage);
+            myPage.style.display = '';
+            nav.style.height = '';
+        }
+    });
+
+    const section = document.querySelector('section');
+    let currentOptionBeingEdited = null;
+
+    hover.forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            if (nav.classList.contains('active') && window.matchMedia("(max-width: 430px)").matches) {
+                nav.style.height = `${section.offsetHeight}px`
+            }
+        });
+    });
+
+
+    let isHovered = false;
+
+    hover.forEach(button => {
+        button.addEventListener('mouseover', () => {
+            showMenuBar();
+            isHovered = true;
+        });
+    });
+
+    wrap.addEventListener("mouseleave", function () {
+        if (!isHovered) {
+            hideMenuBar();
+        }
+    });
+
+    menuBar.addEventListener("mouseenter", function () {
+        isHovered = true;
+    });
+
+    menuBar.addEventListener("mouseleave", function () {
+        hideMenuBar();
+    });
+
+    section.addEventListener("click", function () {
+        hideMenuBar();
+    })
+
+    function showMenuBar() {
+        nav.classList.add('active');
+    }
+
+    function hideMenuBar() {
+        nav.classList.remove('active');
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // 그림 파트
+
+    // DB에 연결해서 재고는 마이너스처리; 완품은 플러스처리
+    // 불량품도 부품과 완품으로 나눠서 DB 연결
+    let completComNum = 0;
+    let completeComputer = document.querySelector(".completeComputer");
+    setInterval(() => {
+        completComNum++;
+        console.log("completComNum : " + completComNum);
+        completeComputer.innerHTML = completComNum;
+    }, 27000);
+
+
+    // 공정 라인 버튼 색깔만 바뀌게 - DB 에는 실제로 라인 4개 형성해서 보여지는 스크립트 추가하기
+    <%
+    for(int i=1; i<list.size(); i++) {
+    %>
+    	document.querySelector('.treeProcess<%= i%>').style.display = "none";
+    <%
+    }
+    %>
+
     
+    document.querySelector('.tree-graph-line-title1').addEventListener("click", () => {
+        document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#aaa";
+        document.querySelector('.tree-graph-line-title2').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title3').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title4').style.backgroundColor = "#eee";
+        
+        document.querySelector('.treeProcess0').style.display = "block";
+        document.querySelector('.treeProcess1').style.display = "none";
+        document.querySelector('.treeProcess2').style.display = "none";
+        document.querySelector('.treeProcess3').style.display = "none";
+        
+    });
+    
+    document.querySelector('.tree-graph-line-title2').addEventListener("click", () => {
+        document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title2').style.backgroundColor = "#aaa";
+        document.querySelector('.tree-graph-line-title3').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title4').style.backgroundColor = "#eee";
+        
+        document.querySelector('.treeProcess0').style.display = "none";
+        document.querySelector('.treeProcess1').style.display = "block";
+        document.querySelector('.treeProcess2').style.display = "none";
+        document.querySelector('.treeProcess3').style.display = "none";
+    });
+    
+    document.querySelector('.tree-graph-line-title3').addEventListener("click", () => {
+        document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title2').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title3').style.backgroundColor = "#aaa";
+        document.querySelector('.tree-graph-line-title4').style.backgroundColor = "#eee";
+        
+        document.querySelector('.treeProcess0').style.display = "none";
+        document.querySelector('.treeProcess1').style.display = "none";
+        document.querySelector('.treeProcess2').style.display = "block";
+        document.querySelector('.treeProcess3').style.display = "none";
+    });
+    
+    document.querySelector('.tree-graph-line-title4').addEventListener("click", () => {
+        document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title2').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title3').style.backgroundColor = "#eee";
+        document.querySelector('.tree-graph-line-title4').style.backgroundColor = "#aaa";
+        
+        document.querySelector('.treeProcess0').style.display = "none";
+        document.querySelector('.treeProcess1').style.display = "none";
+        document.querySelector('.treeProcess2').style.display = "none";
+        document.querySelector('.treeProcess3').style.display = "block";
+    });
+
+
+    // 모바일 대응 스크립트
+    hover.forEach(link => {
+        link.addEventListener("click", function (event) {
+            let myPage = document.querySelector("#myPage");
+            let menuBar = document.querySelector(".menu-bar");
+            let mainPage = document.querySelector(".wrap");
+            let companyLogo = document.querySelector("#workerLogo");
+
+            let ulLi = document.querySelectorAll(".menu-bar-content ul li");
+
+            event.preventDefault();
+            if (nav.classList.contains('active') && window.matchMedia("(max-width: 430px)").matches) {
+                nav.style.height = `${section.offsetHeight}px`
+
+                // 관리자
+                for (let i = 0; i < ulLi.length; i++) {
+                    ulLi[i].style.padding = '7px';
+                    // ulLi[i].style.margin = '0px';
+
+                }
+                menuBar.prepend(myPage);
+            }
+        });
+    });
+
+
+    // 마이페이지
+    document.querySelector("#workerName").addEventListener("click", () => {
+        window.open("myPage.html", '_blank', 'width = 630, height = 470, top=100, left=100');
+    });
+})
+</script>
 </body>
-<scirpt src="process.js"></scirpt>
 </html>

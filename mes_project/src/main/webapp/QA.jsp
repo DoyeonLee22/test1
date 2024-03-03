@@ -1,252 +1,370 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="board.free.BoardDTO"%>
+<%@ page import="java.time.LocalDateTime"%>
+<%@ page import="java.time.format.DateTimeFormatter"%>
+
+
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Q&A Page</title>
-<link rel="stylesheet" href="qa.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freedom_Table Page</title>
+<link rel="stylesheet" href="css/bt.css">
 
 </head>
 
 <body>
-    <div id="workerTitle">
-        <div id="workerLogo">
-            <a href="#">
-                <image
-                    src="https://cdn.discordapp.com/attachments/1185161279804026893/1200675420325036082/Jlogo.png?ex=65c70b1f&is=65b4961f&hm=ae28f53e9280fe71cffc1fc2ca74aec892875f13143ef4e109da28023c5b414b&"
-                    class="logo"></image>
-            </a>
-        </div>
-        <h1 id="mainTitle1"><a href="main.html">작업자 페이지</a></h1>
-        <h1 id="mainTitle2"><a href="main.html">관리자 페이지</a></h1>
-        <div id="myPage">
-            <div id="myPageLogo">
-                <image
-                    src="https://cdn.discordapp.com/attachments/1185161279804026893/1200675420551520370/workerP.jpg?ex=65c70b1f&is=65b4961f&hm=c49f91b245305c4bb33c58e626bc4960b4f601257e433425a8d7cc0da454126e&"
-                    class="workerPic">
-            </div>
-            <span id="workerName"><span class="workerGrade">관리자<br></span>이도연 대리님</span>
-        </div>
-    </div>
+	<%
+	// 세션에서 권한 정보 가져오기
+	session = request.getSession(false);
+	String role = null;
+	String userId = null;
+	if (session != null) {
+		role = (String) session.getAttribute("role");
+		userId = (String) session.getAttribute("user");
+	}
+	System.out.println("----------------------------------------------------");
+	System.out.println("session : " + session);
+	System.out.println("role : " + role);
+	System.out.println("userId : " + userId);
 
-    <div class="wrap">
-        <div class="header-nav-container">
-            <header>
-                <!-- 모바일 헤더 코드 -->
-                <div class="header-content">
-                    <div class="hamburger-menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <h1 id="headerTitle" style="display: none;"><a href="main.html">J.company</a></h1>
-                </div>
-                <ul>
-                    <li><a href="work-order.html" class="hover" title="작업지시서">작업</a></li>
-                    <li><a href="facilityMonitoring.html" class="hover" title="품질검사">설비</a></li>
-                    <li><a href="stock_status.html" class="hover" title="건의사항">재고관리</a></li>
-                    <li id="adminTitle"><a href="Employee_managemen.html" class="hover" title="직원관리">직원관리</a></li>
-                    <li><a href="boardTable.html" class="hover" title="직원 게시판">게시판</a></li>
-                </ul>
-            </header>
-            <nav>
-                <div class="menu-bar">
-                    <div class="menu-bar-content">
-                        <ul>
-                            <li><a href="work-order.html">작업 지침서</a></li>
-                            <li><a href="work-safety.html">안전 지침서</a></li>
-                            <li><a href="work-quality.html">품질검사</a></li>
-                            <li><a href="work-report.html">작업보고</a></li>
-                        </ul>
-                    </div>
-                    <div class="menu-bar-content">
-                        <ul>
-                            <li><a href="facilityMonitoring.html">설비 모니터링</a></li>
+	String displayGrade = "잘못된 접근";
+	String displayTitle = "잘못된 접근";
+	if ("ADMIN".equals(role)) {
+		displayGrade = "관리자";
+		displayTitle = "관리자 페이지";
+	} else if ("WORKER".equals(role)) {
+		displayGrade = "작업자";
+		displayTitle = "작업자 페이지";
+	}
+	%>
+	<div id="workerTitle">
+		<div id="workerLogo">
+			<a href="#"> <image
+					src="${pageContext.request.contextPath}/images/logo.png"
+					class="logo"></image>
+			</a>
+		</div>
+		<h1 id="mainTitle">
+			<a href="main.jsp"><%=displayTitle%></a>
+		</h1>
+		<div id="myPage">
+			<div id="myPageLogo">
+				<image src="${pageContext.request.contextPath}/images/bee_happy.png"
+					class="workerPic">
+			</div>
+			<span id="workerName"><span class="workerGrade"><%=displayGrade%><br></span>${sessionScope.name}</span>
+		</div>
+	</div>
 
-                            <li><a href="process.html">공정도</a></li>
+	<div class="wrap">
+		<div class="header-nav-container">
+			<header>
+				<!-- 모바일 헤더 코드 -->
+				<div class="header-content">
+					<div class="hamburger-menu">
+						<span></span> <span></span> <span></span>
+					</div>
+					<h1 id="headerTitle" style="display: none;">
+						<a href="main.html">J.company</a>
+					</h1>
+				</div>
+				<ul>
+					<li><a href="work-order.html" class="hover" title="작업지시서">작업</a></li>
+					<li><a href="facilityMonitoring.html" class="hover"
+						title="품질검사">설비</a></li>
+					<li><a href="stock_status.html" class="hover" title="건의사항">재고관리</a></li>
+					<%
+					if ("ADMIN".equals(role)) {
+					%>
+					<li id="adminTitle"><a href="Employee_managemen.html"
+						class="hover" title="직원관리">직원관리</a></li>
+					<%
+					}
+					%>
+					<li><a href="boardTable.html" class="hover" title="직원 게시판">게시판</a></li>
+				</ul>
+			</header>
+			<nav>
+				<div class="menu-bar">
+					<div class="menu-bar-content">
+						<ul>
+							<li><a href="work-order.html">작업 지침서</a></li>
+							<li><a href="work-safety.html">안전 지침서</a></li>
+							<li><a href="work-quality.html">품질검사</a></li>
+							<li><a href="work-report.html">작업보고</a></li>
+						</ul>
+					</div>
+					<div class="menu-bar-content">
+						<ul>
+							<li><a href="facilityMonitoring.html">설비 모니터링</a></li>
 
-                            <li><a href="facilitiespage.html">설비 설정</a></li>
-                        </ul>
-                    </div>
-                    <div class="menu-bar-content">
-                        <ul>
-                            <li><a href="stock_status.html">재고 현황</a></li>
-                            <li><a href="Stock_Request.html">재고 신청</a></li>
-                            <li><a href="Finished_product_management.html">완제품 관리</a></li>
-                            <li><a href="Report_of_defective_inventory.html">재고 불량 신고</a></li>
-                        </ul>
-                    </div>
-                    <div class="menu-bar-content" id="adminNav">
-                        <ul>
-                            <li><a href="Employee_managemen.html">직원목록</a></li>
-                            <li><a href="work-record.html">근무기록</a></li>
-                            <li><a href="vacation.html">휴가신청</a></li>
-                        </ul>
-                    </div>
-                    <div class="menu-bar-content">
-                        <ul>
-                            <li><a href="boardTable.html">자유게시판</a></li>
-                            <li><a href="suggestTable.html">건의사항</a></li>
-                            <li><a href="QA.html">Q&A</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
-        <div class="aside-section-container">
-            <aside>
-                <ul>
-                    <li>
-                        <a href="boardTable.html">자유게시판</a>
-                    </li>
-                    <li>
-                        <a href="suggestTable.html">건의사항</a>
-                    </li>
-                    <li>
-                        <a href="QA.html">Q&A</a>
-                    </li>
-                </ul>
-            </aside>
-            <section>
-                <div style="text-align: center; margin-top: 30px;">
-                    <h2>Q & A</h2>
-                </div>
-                <div class="search-container">
-                    <input type="text" class="search_text" placeholder="Search...">
-                    <img width="25" height="25"
-                        src="https://cdn.discordapp.com/attachments/1186454147558551552/1201320591920218232/2866321.png?ex=65d29e7c&is=65c0297c&hm=5284e6af05cf1457e4f7d3b9801cf540e14d90d174b0003a4974d4691c79b6bb&"
-                        alt="Search" class="glasses">
-                </div>
-                <table id="boardTable">
-                    <thead>
-                        <tr style="background-color: #ddd;">
-                            <th width="50">No.</th>
-                            <th>제목</th>
-                            <th width="80">작성자</th>
-                            <th width="170">작성일</th>
-                            <th width="55">조회수</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr class="noticeTr">
-                            <td>F & Q</td>
-                            <td class="tableTdTitle">어떤 안전대책을 시행하고 있나요?</td>
-                            <td style="display: none;"><textarea
-                                    class="contentBox">저희 생산공장에서는 안전이 최우선입니다. 정기적인 장비 점검, 전 직원 종합 교육, 개인보호장비(PPE) 의무화 등 엄격한 안전 프로토콜을 준수하고 있습니다. 저희 시설에는 최첨단 장비가 갖춰져 있습니다. 비상 차단 시스템, 화재 진압 장비, 위험 감지 센서를 포함한 미술 안전 기능을 갖추고 있습니다. 우리는 정기적인 안전 훈련을 실시하고 안전 위반에 대해 무관용 정책을 시행하여 모든 직원의 안전한 작업 환경을 보장합니다.</textarea>
-                            </td>
-                            <td class="writer">최민수</td>
-                            <td>24.02.05 14:00</td>
-                            <td>35</td>
-                        </tr>
-                        <tr class="noticeTr">
-                            <td>F & Q</td>
-                            <td class="tableTdTitle">환경 지속가능성을 어떻게 관리하나요?
-                            </td>
-                            <td style="display: none;"><textarea
-                                    class="contentBox">우리 공장은 지속 가능한 생산 관행에 전념하고 있습니다. 우리는 에너지 효율적인 기술을 활용하고 포괄적인 재활용 프로그램을 통해 폐기물을 최소화하는 것을 목표로 합니다. 혁신적인 재사용 및 처리 프로세스를 통해 물 보존이 시행됩니다. 우리는 지속적으로 탄소 배출량을 평가하고 재생 가능 에너지원에 투자합니다. 환경에 미치는 영향을 최소화하기 위해 노력하고 있습니다. 우리의 지속 가능성 이니셔티브는 글로벌 표준에 부합하며 지역 사회와 적극적으로 협력하여 환경 인식과 보존을 장려합니다.</textarea>
-                            </td>
-                            <td class="writer">최민수</td>
-                            <td>24.02.01 13:00</td>
-                            <td>51</td>
-                        </tr>
-                        <tr class="noticeTr">
-                            <td>F & Q</td>
-                            <td class="tableTdTitle">품질 관리 프로세스를 설명할 수 있습니까?
-                            </td>
-                            <td style="display: none;"><textarea
-                                    class="contentBox">품질은 우리 운영의 핵심입니다. 우리 공장은 생산의 모든 단계를 포괄하는 강력한 품질 관리 시스템을 사용합니다. 우리는 산업 표준 및 고객 사양을 준수하는지 확인하기 위해 원자재 검사, 공정 중 모니터링 및 최종 제품 테스트를 수행합니다. 우리의 전담 품질 관리 팀은 고급 분석 방법과 장비를 사용하여 품질 편차를 즉시 식별하고 해결합니다. 우리는 지속적인 개선에 전념하고 ISO 품질 관리 표준을 준수하여 우리 제품이 최고 품질 벤치마크를 충족하도록 보장합니다.</textarea>
-                            </td>
-                            <td class="writer">최민수</td>
-                            <td>24.01.28 13:00</td>
-                            <td>91</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="button-zip">
-                    <button type="button" id="noticeWriteBtn">공지</button>
-                    <button type="button" id="writeBtn">질문하기</button>
-                </div>
-                <div id="directBtnZip">
-                    <button type="button" class="directBtn"> &lt;&lt; </button>
-                    <button type="button" class="directBtn"> &lt; </button>
-                    <button type="button" class="numberBtn" style="margin-left: 20px;">1</button>
-                    <button type="button" class="numberBtn" style="margin-right: 20px;">2</button>
-                    <button type="button" class="directBtn"> &gt; </button>
-                    <button type="button" class="directBtn"> &gt;&gt; </button>
-                </div>
-                <div id="writeDiv">
-                    <div>
-                        <span style="font-size: 20px;">글 작성</span>
-                    </div>
-                    <table id="writeTable">
-                        <tr>
-                            <th width="70">제목</th>
-                            <td><input type="text" id="writeTitle"></td>
-                        </tr>
-                        <tr>
-                            <th>내용</th>
-                            <td><textarea id="textBox" rows="10" cols="60"></textarea></td>
-                        </tr>
-                    </table>
-                    <div class="wrtieBtnZip">
-                        <button type="button" id="clearWrite">작성</button>
-                        <button type="button" id="resetWrite">취소</button>
-                    </div>
-                </div>
-                <div id="noticeWriteDiv">
-                    <div>
-                        <span style="font-size: 20px;">공지 작성</span>
-                    </div>
-                    <table id="noticeWriteTable">
-                        <tr>
-                            <th width="70">제목</th>
-                            <td><input type="text" id="noticeWriteTitle"></td>
-                        </tr>
-                        <tr>
-                            <th>내용</th>
-                            <td><textarea id="noticeTextBox" rows="10" cols="60"></textarea></td>
-                        </tr>
-                    </table>
-                    <div class="noticeWrtieBtnZip">
-                        <button type="button" id="noticeClearWrite">작성</button>
-                        <button type="button" id="noticeResetWrite">취소</button>
-                    </div>
-                </div>
-                <div id="myModal" class="modal">
-                    <div class="modal-content">
-                        <span id="closeModalBtn" class="close"><img
-                                src="https://cdn.discordapp.com/attachments/1185161279804026893/1201735089197957160/15287.png?ex=65cae604&is=65b87104&hm=e986c916b65b591d57dfc74b65c46d3425de849f447a26132c493960a55a129b&"></span>
-                        <table id="readTable">
-                            <tr>
-                                <th width="70">제목</th>
-                                <td><input type="text" id="readTitle" readonly></td>
-                            </tr>
-                            <tr>
-                                <th height="30">작성자</th>
-                                <td><input type="text" id="writer" readonly></td>
-                            </tr>
-                            <tr>
-                                <th>내용</th>
-                                <td><textarea id="textContentBox" rows="10" cols="30" readonly></textarea></td>
-                            </tr>
-                        </table>
-                        <div class="btnZip">
-                            <button type="button" id="deleteBtn">닫기</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="toggleDiv">
-                    <button type="button" id="toggle">토글</button>
-                </div>
-            </section>
-        </div>
-        <footer>ⓒ2024 J.company System</footer>
-    </div>
+							<li><a href="process.html">공정도</a></li>
 
+							<li><a href="facilitiespage.html">설비 설정</a></li>
+						</ul>
+					</div>
+					<div class="menu-bar-content">
+						<ul>
+							<li><a href="stock_status.html">재고 현황</a></li>
+							<li><a href="Stock_Request.html">재고 신청</a></li>
+							<li><a href="Finished_product_management.html">완제품 관리</a></li>
+							<li><a href="Report_of_defective_inventory.html">재고 불량
+									신고</a></li>
+						</ul>
+					</div>
+					<%
+					if ("ADMIN".equals(role)) {
+					%>
+					<div class="menu-bar-content" id="adminNav">
+						<ul>
+							<li><a href="Employee_managemen.html">직원목록</a></li>
+							<li><a href="work-record.html">근무기록</a></li>
+							<li><a href="vacation.html">휴가신청</a></li>
+						</ul>
+					</div>
+					<%
+					}
+					%>
+					<div class="menu-bar-content">
+						<ul>
+							<li><a href="dot?boardType=자유게시판">자유게시판</a></li>
+							<li><a href="dot?boardType=건의게시판">건의사항</a></li>
+							<li><a href="dot?boardType=QaA게시판">Q&A</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="aside-section-container">
+			<aside>
+				<ul>
+					<li><a href="dot?boardType=자유게시판">자유게시판</a></li>
+					<li><a href="dot?boardType=건의게시판">건의사항</a></li>
+					<li><a href="dot?boardType=QaA게시판">Q&A</a></li>
+				</ul>
+			</aside>
+			<section>
+				<div style="text-align: center; margin-top: 30px;">
+					<h2>Q & A</h2>
+				</div>
+				<div class="search-container">
+					<input type="text" class="search_text" placeholder="Search...">
+					<img width="25" height="25"
+						src="https://cdn.discordapp.com/attachments/1186454147558551552/1201320591920218232/2866321.png?ex=65d29e7c&is=65c0297c&hm=5284e6af05cf1457e4f7d3b9801cf540e14d90d174b0003a4974d4691c79b6bb&"
+						alt="Search" class="glasses">
+				</div>
+				<table id="boardTable">
+					<thead>
+						<tr style="background-color: #ddd;">
+							<th width="50">No.</th>
+							<th width="330">제목</th>
+							<th width="85">작성자</th>
+							<th width="170">작성일</th>
+							<th width="76">조회수</th>
+							<th id="deleteTH" border="0">삭제</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody">
+						<%
+						try {
+							List list = (List) request.getAttribute("list");
+							System.out.println("list.size() : " + list.size());
+							for (int i = 0; i < list.size(); i++) {
+								BoardDTO board = (BoardDTO) list.get(i);
 
+								String boardType = board.getBoardType();
+								int seq = board.getSeq();
+								String userDBId = board.getUserId();
+								String num = board.getNum();
+								String title = board.getTitle();
+								String content = board.getContent();
+								String writer = board.getWriter();
+								Date wDate = board.getWdate();
+								int viewCount = board.getHits();
+						%>
+						<tr class="noticeTr">
+							<td style="display: none" id="userIdWrite"><%=userDBId%></td>
+							<td><%=num%></td>
+							<td class="tableTdTitle" data-seq="<%=seq%>"
+								onclick="countPlus(<%=seq%>)"><%=title%></td>
+							<td style="display: none;"><textarea class="contentBox"><%=content%></textarea></td>
+							<td class="writer"><%=writer%></td>
+							<td><%=wDate%></td>
+							<td class="viewCount"><%=viewCount%></td>
+							<td class="hiddenTd">
+								<!-- 삭제 버튼 -->
+								<button type="button" name="<%=seq%>" class="deleteBtn"
+									onclick="deletePost(<%=seq%>)">삭제</button>
+							</td>
+						</tr>
+						<%
+						}
+						} catch (Exception e) {
+						System.out.println("에러");
+						e.printStackTrace();
+						}
+						%>
+					</tbody>
+				</table>
+				<div class="button-zip">
+					<%
+					if ("ADMIN".equals(role)) {
+					%>
+					<button type="button" id="deleteWriteBtn">글삭제</button>
+					<button type="button" id="deleteWriteBtn2">취소</button>
+					<%
+					}
+					%>
+					<button type="button" id="writeBtn">글쓰기</button>
+				</div>
+				<div id="directBtnZip">
+					<button type="button" class="directBtn">&lt;&lt;</button>
+					<button type="button" class="directBtn">&lt;</button>
+					<button type="button" class="numberBtn" style="margin-left: 20px;">1</button>
+					<button type="button" class="numberBtn" style="margin-right: 20px;">2</button>
+					<button type="button" class="directBtn">&gt;</button>
+					<button type="button" class="directBtn">&gt;&gt;</button>
+				</div>
+				<form method="GET" action="doi">
+					<div id="writeDiv">
+						<div class="whiteBoard">
+							<div>
+								<span style="font-size: 20px; font-weight: bold;">글 작성</span>
+							</div>
+							<table id="writeTable">
+								<tr>
+									<td style="display: none"><input type="text"
+										name="boardType" value="QaA게시판"></td>
+									<td style="display: none"><input type="text" name="num"
+										value="1"></td>
+									<td style="display: none"><input type="text" name="writer"
+										value="${sessionScope.name}"></td>
+									<td style="display: none"><input type="text" name="hits"
+										value="0"></td>
+									<td style="display: none"><input type="text" name="wdate"
+										value="" id="nowTime"></td>
+									<td style="display: none"><input type="text" name="userId"
+										value="<%=userId%>"></td>
+								</tr>
+								<tr>
+									<th width="70">제목</th>
+									<td><input type="text" id="writeTitle" name="title"></td>
+								</tr>
+								<tr>
+									<th>내용</th>
+									<td><textarea id="textBox" rows="10" cols="60"
+											name="content"></textarea></td>
+								</tr>
+							</table>
+							<div class="wrtieBtnZip">
+								<button type="submit" id="clearWrite">작성</button>
+								<button type="button" id="resetWrite">취소</button>
+							</div>
+						</div>
+					</div>
+				</form>
+
+				<form method="GET" action="dou">
+					<div id="myModal" class="modal">
+						<div class="modal-content">
+							<span id="closeModalBtn" class="close"><img
+								src="https://cdn.discordapp.com/attachments/1185161279804026893/1201735089197957160/15287.png?ex=65cae604&is=65b87104&hm=e986c916b65b591d57dfc74b65c46d3425de849f447a26132c493960a55a129b&"></span>
+							<table id="readTable">
+								<tr style="display: none">
+									<td><input type="hidden" id="seq" name="seq" value=""></td>
+								</tr>
+								<tr>
+									<th width="70">제목</th>
+									<td><input type="text" id="readTitle" name="title"
+										readonly></td>
+								</tr>
+								<tr>
+									<th height="30">작성자</th>
+									<td><input type="text" id="writer" name="writer" readonly></td>
+								</tr>
+								<tr>
+									<th>내용</th>
+									<td><textarea id="textContentBox" name="content" rows="10"
+											cols="35" readonly></textarea></td>
+								</tr>
+							</table>
+							<div class="btnZip">
+								<button type="button" id="crystalBtn">수정</button>
+								<button type="submit" id="jewelerBtn">수정완료</button>
+								<button type="button" id="delBtn">삭제</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</section>
+		</div>
+		<footer>ⓒ2024 J.company System</footer>
+	</div>
+	<script>
+		let userRole = '<%=role%>';
+		let writeId = '<%=userId%>';
+
+		let ttr = document.querySelectorAll(".tableTdTitle");
+		let delBtn2nd = document.querySelector("#delBtn");
+		
+		for(let i=0; i<ttr.length; i++) {
+			ttr[i].addEventListener("click", (event) => {
+				let userId = event.currentTarget.closest("tr").querySelector("#userIdWrite").innerText;
+
+				console.log("userId : " + userId);
+				let seqValue = event.target.getAttribute('data-seq');
+				if(userId == writeId && userId != null) {
+					document.querySelector("#delBtn").style.display = "inline";
+				} else {
+					document.querySelector("#delBtn").style.display = "none";
+				}
+	            console.log("seqValue : " + seqValue);
+	            console.log("delBtn2nd : " + delBtn2nd.parentNode.innerHTML);
+				
+	            delBtn2nd.onclick = function() {
+	            	console.log("seqValue2 : " + seqValue);
+	            	let boardTypeName = document.querySelector('input[name="boardType"]');
+	            	let boardType = boardTypeName.value;
+	            	window.location.href = "dod?seq=" + seqValue + "&boardType=" + boardType;
+	            	console.log("seqValue2 : " + seqValue);
+	            };
+			})
+		}
+		if(userRole != null && userRole == "ADMIN") {
+			document.querySelector("#deleteWriteBtn").addEventListener("click", () => {
+				document.querySelector("#deleteWriteBtn").style.display = "none";
+				document.querySelector("#deleteWriteBtn2").style.display = "inline";
+	
+				let hiddenTd = document.querySelectorAll(".hiddenTd");
+				document.querySelector("#deleteTH").style.display = "table-cell";
+				for (let i = 0; i < hiddenTd.length; i++) {
+					hiddenTd[i].style.display = "table-cell";
+				}
+			});
+	
+			document.querySelector("#deleteWriteBtn2").addEventListener("click", () => {
+				document.querySelector("#deleteWriteBtn").style.display = "inline";
+				document.querySelector("#deleteWriteBtn2").style.display = "none";
+	
+				let hiddenTd = document.querySelectorAll(".hiddenTd");
+				document.querySelector("#deleteTH").style.display = "none";
+				for (let i = 0; i < hiddenTd.length; i++) {
+					hiddenTd[i].style.display = "none";
+				}
+			})
+			
+		}
+
+		
+	</script>
+	<script src="js/bt.js"></script>
 </body>
-<script src="qa.js"></script>
+
 </html>

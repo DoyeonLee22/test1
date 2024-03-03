@@ -618,7 +618,7 @@ section div h2 {
 	
 }
 
-#deleteWriteBtn:hover, #deleteWriteBtn2 {
+#deleteWriteBtn:hover, #deleteWriteBtn2:hover {
 	background-color: rgb(163, 6, 6);
     transition: 0.2s;
 }

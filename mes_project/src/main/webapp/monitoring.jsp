@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitoring Page</title>
 
-<link rel="stylesheet" href="monitoring.css">
+<link rel="stylesheet" href="css/monitoring.css">
 </head>
 
 <body>
@@ -64,11 +64,9 @@
                     </div>
                     <div class="menu-bar-content">
                         <ul>
-                            <li><a href="facilityMonitoring.html">설비 모니터링</a></li>
-
+                            <li><a href="monitor">설비 모니터링</a></li>
                             <li><a href="process.html">공정도</a></li>
-
-                            <li><a href="facilitiespage.html">설비 설정</a></li>
+                            <li><a href="grade">설비 설정</a></li>
                         </ul>
                     </div>
                     <div class="menu-bar-content">
@@ -98,7 +96,6 @@
         </div>
         <div class="aside-section-container">
             <aside>
-                <!-- aside 영역내에 메뉴 추가 가능함 -->
                 <ul>
                     <li>
                         <a href="FacilityMonitoring.html">설비 모니터링</a>
@@ -167,7 +164,7 @@
         </div>
         <footer>ⓒ2024 J.company System</footer>
     </div>
-<script src="monitoring.js"></script>
+<script src="js/monitoring.js"></script>
 
 </body>
 

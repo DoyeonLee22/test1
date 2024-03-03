@@ -87,10 +87,10 @@ public class LoginServlet extends HttpServlet {
 			// 메인 페이지 또는 권한에 따른 페이지로 리다이렉트
 			if (user.getRole() == Role.ADMIN) {
 				// 나중에 관리자용 대시보드 페이지 구현예정
-				response.sendRedirect("main.jsp");
+				response.sendRedirect("main");
 			} else {
 				// 최초 로그인시 접근 페이지
-				response.sendRedirect("main.jsp");
+				response.sendRedirect("main");
 			}
 		} else {
 			// 로그인 실패 카운트 증가
