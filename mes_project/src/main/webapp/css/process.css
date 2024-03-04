@@ -630,6 +630,77 @@ td {
 	position: relative;
 }
 
+.status {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.status::before {
+    content: '🔴';
+    margin-right: 5px;
+}
+
+.operations {
+    font-family: 맑은 고딕;
+    font-weight: bold;
+    margin-top: 10px;
+    background-color: #eef;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.process h4 {
+    margin-top: 0;
+}
+
+.process1, .process2, .process3, .process4 {
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    width: 127px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+#monitoring {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.process1:hover, .process2:hover, .process3:hover, .process4:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.tent {
+	position: absolute;
+	background-color: #eee;
+	width: 500px;
+	height: 100px;
+    top: 1134px;
+    left: 75px;
+    display: none;
+}
+
+.tent2 {
+	position: absolute;
+	background-color: #eee;
+	width: 500px;
+	height: 100px;
+    top: 924px;
+    left: 241px;
+    display: none;
+}
+
+
 @media screen and (max-width: 430px) {
 	#toggleDiv {
 		margin-left: 330px;

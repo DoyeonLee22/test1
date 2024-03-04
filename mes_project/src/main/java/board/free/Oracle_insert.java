@@ -35,13 +35,10 @@ public class Oracle_insert extends HttpServlet {
 
 		String driver = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@112.148.46.134:51521:xe";
-		String user = "scott4_3";
-		String password = "tiger";
+		String user = "unchild";
+		String password = "mesteam";
 		
 		String boardType = request.getParameter("boardType");
-		System.out.println("==========================");
-		System.out.println("boardType : " + boardType);
-		System.out.println("==========================");
 		
 		try {
 			Class.forName(driver);
@@ -76,42 +73,41 @@ public class Oracle_insert extends HttpServlet {
 					String query = "";
 					query += " insert";
 					query += " into";
-					query += " test2";
+					query += " board";
 
-					// mesid는 기본 시퀀스라서 어디서 받아오는 값이 아니다.
-					query += " (boardType, seq, userId, num, title, content, writer, wdate, hits)";
 					query += " values";
 					if("자유게시판".equals(boardType)) {
-						query += " ('자유게시판', emp_seq.NEXTVAL, ?, num.NEXTVAL, ?, ?, ?, ?, ?)";
+						query += " (b_id.NEXTVAL, ?, ?, (select staffno from staff where userid = ?), ?, ?, ?)";
 					} else if("QaA게시판".equals(boardType)) {
-						query += " ('QaA게시판', emp_seq.NEXTVAL, ?, num.NEXTVAL, ?, ?, ?, ?, ?)";												
+						query += " (b_id.NEXTVAL, ?, ?, (select staffno from staff where userid = ?), ?, ?, ?)";
 					} else if("건의게시판".equals(boardType)) {
-						query += " ('건의게시판', emp_seq.NEXTVAL, ?, num.NEXTVAL, ?, ?, ?, ?, 0)";												
+						query += " (b_id.NEXTVAL, ?, ?, (select staffno from staff where userid = ?), ?, ?, ?)";
 					}
 
 					System.out.println("query : " + query);
 					PreparedStatement ps = con.prepareStatement(query);
 
 					if("자유게시판".equals(boardType)) {
-						ps.setString(1, userId);
-						ps.setString(2, title);
-						ps.setString(3, content);
-						ps.setString(4, writer);
-						ps.setString(5, wdate);
-						ps.setInt(6, hits);
+						ps.setString(1, title);
+						ps.setString(2, content);
+						ps.setString(3, userId);
+						ps.setString(4, wdate);
+						ps.setInt(5, hits);
+						ps.setString(6, boardType);
 					} else if("QaA게시판".equals(boardType)) {
-						ps.setString(1, userId);
-						ps.setString(2, title);
-						ps.setString(3, content);
-						ps.setString(4, writer);
-						ps.setString(5, wdate);
-						ps.setInt(6, hits);
+						ps.setString(1, title);
+						ps.setString(2, content);
+						ps.setString(3, userId);
+						ps.setString(4, wdate);
+						ps.setInt(5, hits);
+						ps.setString(6, boardType);
 					} else if("건의게시판".equals(boardType)) {
-						ps.setString(1, userId);
-						ps.setString(2, title);
-						ps.setString(3, content);
-						ps.setString(4, writer);
-						ps.setString(5, wdate);
+						ps.setString(1, title);
+						ps.setString(2, content);
+						ps.setString(3, userId);
+						ps.setString(4, wdate);
+						ps.setInt(5, hits);
+						ps.setString(6, boardType);
 					}
 
 					int count = ps.executeUpdate();
@@ -136,42 +132,41 @@ public class Oracle_insert extends HttpServlet {
 					String query = "";
 					query += " insert";
 					query += " into";
-					query += " test2";
+					query += " board";
 
-					// mesid는 기본 시퀀스라서 어디서 받아오는 값이 아니다.
-					query += " (boardType, seq, userId, num, title, content, writer, wdate, hits)";
 					query += " values";
 					if("자유게시판".equals(boardType)) {
-						query += " ('자유게시판', emp_seq.NEXTVAL, ?, '공지', ?, ?, ?, ?, ?)";						
+						query += " (b_id.NEXTVAL, ?, ?, (select staffno from staff where userid = ?), ?, ?, ?)";
 					} else if("QaA게시판".equals(boardType)) {
-						query += " ('QaA게시판', emp_seq.NEXTVAL, ?, 'Q_A', ?, ?, ?, ?, ?)";												
+						query += " (b_id.NEXTVAL, ?, ?, (select staffno from staff where userid = ?), ?, ?, ?)";
 					} else if("건의게시판".equals(boardType)) {
-						query += " ('건의게시판', emp_seq.NEXTVAL, ?, num.NEXTVAL, ?, ?, ?, ?, 0)";												
+						query += " (b_id.NEXTVAL, ?, ?, (select staffno from staff where userid = ?), ?, ?, ?)";
 					}
 
 					System.out.println("query : " + query);
 					PreparedStatement ps = con.prepareStatement(query);
 
 					if("자유게시판".equals(boardType)) {
-						ps.setString(1, userId);
-						ps.setString(2, title);
-						ps.setString(3, content);
-						ps.setString(4, writer);
-						ps.setString(5, wdate);
-						ps.setInt(6, hits);
+						ps.setString(1, title);
+						ps.setString(2, content);
+						ps.setString(3, userId);
+						ps.setString(4, wdate);
+						ps.setInt(5, hits);
+						ps.setString(6, boardType);
 					} else if("QaA게시판".equals(boardType)) {
-						ps.setString(1, userId);
-						ps.setString(2, title);
-						ps.setString(3, content);
-						ps.setString(4, writer);
-						ps.setString(5, wdate);
-						ps.setInt(6, hits);
+						ps.setString(1, title);
+						ps.setString(2, content);
+						ps.setString(3, userId);
+						ps.setString(4, wdate);
+						ps.setInt(5, hits);
+						ps.setString(6, boardType);
 					} else if("건의게시판".equals(boardType)) {
-						ps.setString(1, userId);
-						ps.setString(2, title);
-						ps.setString(3, content);
-						ps.setString(4, writer);
-						ps.setString(5, wdate);
+						ps.setString(1, title);
+						ps.setString(2, content);
+						ps.setString(3, userId);
+						ps.setString(4, wdate);
+						ps.setInt(5, hits);
+						ps.setString(6, boardType);
 					}
 
 					int count = ps.executeUpdate();

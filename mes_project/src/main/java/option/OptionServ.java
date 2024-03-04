@@ -34,6 +34,7 @@ public class OptionServ extends HttpServlet {
 
 		try {
 			inOption(request, response);
+			System.out.println("들어감");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("아무것도 못들어감");
@@ -134,27 +135,27 @@ public class OptionServ extends HttpServlet {
 	        dateList.add(timestamp);
 	    }    
 	    
-
 	    String query = "INSERT INTO equipment"
 	    		+ " (e_sequence, e_grade, e_count, e_gpu, e_ssd, e_ram, e_cpu, e_쿨러, e_메인보드, e_파워, nDate)"
-	    		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    		+ " VALUES (lineNum.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	    PreparedStatement ps = con.prepareStatement(query);
+	    System.out.println("query : " + query);
 
 	    for (int i = 0; i < selectGrades.length; i++) {
 
-	        ps.setInt(1, cLine[i]);
-	        ps.setString(2, selectGrades[i]);
-	        ps.setInt(3, counts[i]);
+//	        ps.setInt(1, cLine[i]);
+	        ps.setString(1, selectGrades[i]);
+	        ps.setInt(2, counts[i]);
 
 	        // 선택된 부품만을 사용하여 쿼리 작성
-	        ps.setString(4, gpu[i]);
-	        ps.setString(5, ssd[i]);
-	        ps.setString(6, ram[i]); 
-	        ps.setString(7, cpu[i]); 
-	        ps.setString(8, cooler[i]);
-	        ps.setString(9, mainboard[i]);
-	        ps.setString(10, power[i]);
-	        ps.setTimestamp(11, dateList.get(i));
+	        ps.setString(3, gpu[i]);
+	        ps.setString(4, ssd[i]);
+	        ps.setString(5, ram[i]); 
+	        ps.setString(6, cpu[i]); 
+	        ps.setString(7, cooler[i]);
+	        ps.setString(8, mainboard[i]);
+	        ps.setString(9, power[i]);
+	        ps.setTimestamp(10, dateList.get(0));
 
 	        int start = ps.executeUpdate();
 	    }

@@ -138,17 +138,25 @@
 				</ul>
 			</aside>
 			<section>
+
 				<h1 style="text-align: center; font-size: 30px; margin-top: 40px">공정도</h1>
 				<div class="process-chart">
 					<form method="GET" action="proc" id="myForm">
-						<div id="section-nav">
+						<input type="hidden" name="DBType" value="insert">
+
+						<div id="monitoring">
 							<%
 						List<List> list = (List<List>) request.getAttribute("list");
 						for (int i = 1; i <= 4; i++) {
 						%>
-							<div class="tree-graph-line-title<%=i%>">
-								<input type="hidden" value="<%=i%>번 라인" name="lineNum">
-								<%=i%>번 라인
+							<div class="process<%=i %>">
+								<h4><%=i %>번 라인
+								</h4>
+								<div id="status<%=i %>" class="status">Pending</div>
+								<div id="defectRate<%=i %>" class="operations">불량률 : 0%</div>
+								<div id="defectCount<%=i %>" class="operations">불량 : 0</div>
+								<div id="goodCount<%=i %>" class="operations">통과 : 0</div>
+								<div id="operations<%=i %>" class="operations">사이클 횟수 : 0</div>
 							</div>
 							<%
 						}
@@ -162,14 +170,14 @@
 
 
 							<%
-						System.out.println("list 크기 : " + list.size()); // 3
+// 						System.out.println("list 크기 : " + list.size()); // 3
 						List map = null;
 						for (int i = 0; i < list.size(); i++) {
 							List monitor = list.get(i);
 
 							map = new ArrayList();
 
-							System.out.println("monitor 크기 : " + monitor.size()); // 10
+// 							System.out.println("monitor 크기 : " + monitor.size()); // 10
 
 							if (monitor.get(0) instanceof Number) {
 								map.add(monitor.get(0) + "번 라인 점검");
@@ -257,11 +265,9 @@
 								<input type="hidden" name="grade<%=i %>"
 									value="<%=map.get(1) %>">
 								<%
-							System.out.println("map.size : " + map.size());
+// 							System.out.println("map.size : " + map.size());
 							for (int j = 0; j < map.size(); j++) {
-								System.out.println(j + "번 인덱스 map 내용 : " + map.get(j));
 								if (!"Default".equals(map.get(j)) || "수정사항 확인".equals(map.get(j)) || "조립 검토".equals(map.get(j))) {
-									System.out.println(j + "번 인덱스 map 내용 : " + map.get(j) + "if문");
 									if (j < 3) {
 							%>
 								<div class="treecircle<%=j%>"
@@ -293,12 +299,12 @@
 							} else {
 							%>
 								<div class="treecircle<%=j%>"
-									style="line-height: 150px; background-color: #4c54cb; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; color: #fff; top: 120%; left: calc(<%=180 - ((j - 7) * 30)%>% - 150px)"><%=map.get(j)%></div>
+									style="line-height: 150px; background-color: #4c54cb; width: 150px; height: 150px; border-radius: 50%; text-align: center; position: absolute; color: #fff; top: 129%; left: calc(<%=180 - ((j - 7) * 30)%>% - 385px)"><%=map.get(j)%></div>
 								<%
 							if (j < (map.size() - 1)) {
 							%>
 								<div class="treeGo<%=j%>"
-									style="font-size: 30px; position: absolute; top: 134%; left: <%=182 - ((j - 5) * 30)%>%">
+									style="font-size: 30px; position: absolute; top: 134%; left: <%=100 - ((j - 5) * 30)%>%">
 									<<<</div>
 								<%
 							}
@@ -313,6 +319,8 @@
 						%>
 						</div>
 
+						<div class="tent"></div>
+						<div class="tent2"></div>
 
 						<%
 						for (int i = 0; i < 4; i++) {
@@ -378,6 +386,7 @@
 let userRole = '<%=role%>'; 
 
 document.addEventListener("DOMContentLoaded", function () {
+	
     // 공통 스크립트 : 나중에 공동파일로 관리할 예정
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const hover = document.querySelectorAll('a.hover');
@@ -455,28 +464,84 @@ document.addEventListener("DOMContentLoaded", function () {
         nav.classList.remove('active');
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	<%
+    for (int i = 0; i < 3; i++) {
+	%>
+	    var makeCount<%=i%> = document.querySelectorAll(".treecircle2");
+	    var countNum<%=i%> = [];
+	    
+	
+	    
+        console.log("makeCount<%=i%>.length : " + makeCount<%=i%>.length); // 3
+        
+	        countNum<%=i%>.push(makeCount<%=i%>[<%=i%>].textContent.replace("생산개수 : ", "").replace("개", ""));
+	    
+	
+	        var graph<%=i%> = document.querySelectorAll(".treeProcess<%=i%> [class^=treecircle]");
+	        console.log("graph<%=i%>.length : " + graph<%=i%>.length); // 9 10 7 
+	        
+	        var cursor<%=i%> = 0;
+	        
+		    let interNum<%=i%> = setInterval(() => {
+		    	
+		    	
+	    		let allTreecircle = document.querySelectorAll(".treeProcess<%=i%> [class*=treecircle]");
+	            let now = allTreecircle[allTreecircle.length - 1];
+	            now.style.backgroundColor = "#4c54cb";
+	    	
+                let current = document.querySelector(".treeProcess<%=i %> .treecircle" + cursor<%=i %>);
+		    	document.querySelector(".completeComputer-progress<%= i%>").innerHTML = current.innerHTML;
+                current.style.backgroundColor = "#00ffbb";
 
+                if (cursor<%=i%> > 0) {
+                    let origin = document.querySelector(".treeProcess<%=i%> .treecircle" + ( cursor<%=i%> - 1 ));
+                    origin.style.backgroundColor = "#4c54cb";
+                }
 
+		    	cursor<%=i%>++; 
+
+		    	
+		    	if (cursor<%=i%> >= graph<%=i%>.length) {
+		            cursor<%=i%> = 0; 
+		        }
+		    }, 2000);
+	<%
+	    }
+	%>
 
     // DB에 연결해서 재고는 마이너스처리; 완품은 플러스처리
-    // 불량품도 부품과 완품으로 나눠서 DB 연결\
+    // 불량품도 부품과 완품으로 나눠서 DB 연결
     let isFinished = [false, false, false];
+    let isCounted = [false, false, false];
     
-    <%for (int i = 0; i < 3; i++) {%>
-	    let completComNum<%=i%> = 0; 	// 통과
-	    let failComNum<%=i%> = 0;		// 불량
+    <%
+    for (int i = 0; i < 3; i++) {
+    %>
+	    var completComNum<%=i%> = 0; 	// 통과
+	    var failComNum<%=i%> = 0;		// 불량
+	    var totalComNum<%=i%> = 0;		// 사이클
+	    
 	    let completeComputer<%=i%> = document.querySelector(".completeComputer<%=i%>");
 	    let comProgress<%=i%> = document.querySelector(".completeComputer-progress<%=i%>");
+	    
+
 	    let interval<%=i%> = setInterval(() => {
 	    	if(Math.random() > 0.05) {
 		        completComNum<%=i%>++;
+		        totalComNum<%=i%>++;
 		        console.log("completComNum<%=i%> : " + completComNum<%=i%>);
-		        completeComputer<%=i%>.innerHTML = completComNum<%=i%>;    		
+		        completeComputer<%=i%>.innerHTML = completComNum<%=i%>;
+		        goodCount<%=i + 1 %>.innerHTML = "통과 : " + completComNum<%=i%>;
+		        operations<%=i + 1 %>.innerHTML = "사이클 횟수 : " + totalComNum<%=i%>;
+		        console.log("totalComNum<%=i%> : " + totalComNum<%=i%>)
 	    	} else {
 	    		failComNum<%=i%>++;
+	    		totalComNum<%=i%>++;
 	    		console.log("불량 : " + failComNum<%=i%>);
-		        completeComputer<%=i%>.innerHTML = "<h4 style='color: red'>!!불량!!</hr>";    		    		
+		        completeComputer<%=i%>.innerHTML = "<h4 style='color: red'>!!불량!!</hr>";  
+		        defectCount<%=i + 1 %>.innerHTML = "불량 : " + failComNum<%=i%>;
+		        operations<%=i + 1 %>.innerHTML = "사이클 횟수 : " + totalComNum<%=i%>;
 	    	}
 	    	
 	    	let textElements = document.querySelectorAll(".treecircle2");
@@ -514,44 +579,43 @@ document.addEventListener("DOMContentLoaded", function () {
 		    });
 
 		    if (allFinish) {
+		    	clearInterval(setProC<%=i%>);
+		    	clearInterval(setProC2<%=i%>);
 	            document.getElementById("myForm").submit();
 		    }
 		    
-	    }, 500);
-	<%
-	}
-	%>
+	    }, graph<%=i%>.length*2000);
+	<%}%>
 
     // 공정 라인 버튼 색깔만 바뀌게 - DB 에는 실제로 라인 4개 형성해서 보여지는 스크립트 추가하기
     <%for (int i = 1; i < list.size(); i++) {%>
     	document.querySelector('.treeProcess<%=i%>').style.display = "none";
     <%}%>
-
-    <%for (int i = 0; i < map.size(); i++) {
-	if (i % 3 == 2) {%>
-		    
-    		for(let j = 0; j < document.querySelectorAll(".treeGo<%=i%>").length; j++) {
-    			document.querySelectorAll(".treeGo<%=i%>")[j].style.display = "none";
-			
-    		}
-    <%}
-}
-
-if (map.size() > 9) {%>
-    		document.querySelector(".treeLine3").style.display = "block";
-   	<%}%>
-   	
+    
+    
+    <%for (int i = 0; i < 4; i++) {%>
+	    graph<%=i%> = document.querySelectorAll(".treeProcess<%=i%> [class^=treecircle]");
+	    
+	    for (let i = 0; i < graph<%=i%>.length; i++) {
+			if (i % 3 == 2) {
+	    		for(let j = 0; j < document.querySelectorAll(".treeGo" + i).length; j++) {
+	    			document.querySelectorAll(".treeGo" + i)[j].style.display = "none";
+	    		}
+		    }
+		}
+    <%}%>
+    
+    
+    
+    
+    
    	document.querySelector('.process-chart-time-table0').style.display = "table";
     document.querySelector('.process-chart-time-table1').style.display = "none";
     document.querySelector('.process-chart-time-table2').style.display = "none";
     document.querySelector('.process-chart-time-table3').style.display = "none";
     
     
-    document.querySelector('.tree-graph-line-title1').addEventListener("click", () => {
-        document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#aaa";
-        document.querySelector('.tree-graph-line-title2').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title3').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title4').style.backgroundColor = "#eee";
+    document.querySelector('.process1').addEventListener("click", () => {
         
         document.querySelector('.treeProcess0').style.display = "block";
         document.querySelector('.treeProcess1').style.display = "none";
@@ -561,14 +625,28 @@ if (map.size() > 9) {%>
         document.querySelector('.process-chart-time-table1').style.display = "none";
         document.querySelector('.process-chart-time-table2').style.display = "none";
         document.querySelector('.process-chart-time-table3').style.display = "none";
+        
+        document.querySelector('.tent').style.display = "none";
+        document.querySelector('.tent2').style.display = "none";
+        
+        
+        if (graph0.length > 9) {
+	    	document.querySelector(".tree-line3").style.display = "block";
+	        document.querySelector('.process-chart-time-table0').style.marginTop = "350px";
+	   	} else {
+	    	document.querySelector(".tree-line3").style.display = "none";
+	   	}
+        
+        if(graph0.length == 0) {
+	    	document.querySelector(".tree-line1").style.display = "none";
+	    	document.querySelector(".tree-line2").style.display = "none";
+        } else {
+	    	document.querySelector(".tree-line1").style.display = "block";
+	    	document.querySelector(".tree-line2").style.display = "block";
+        }
     });
     
-    document.querySelector('.tree-graph-line-title2').addEventListener("click", () => {
-        document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title2').style.backgroundColor = "#aaa";
-        document.querySelector('.tree-graph-line-title3').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title4').style.backgroundColor = "#eee";
-        
+    document.querySelector('.process2').addEventListener("click", () => {
         document.querySelector('.treeProcess0').style.display = "none";
         document.querySelector('.treeProcess1').style.display = "block";
         document.querySelector('.treeProcess2').style.display = "none";
@@ -577,13 +655,27 @@ if (map.size() > 9) {%>
         document.querySelector('.process-chart-time-table1').style.display = "table";
         document.querySelector('.process-chart-time-table2').style.display = "none";
         document.querySelector('.process-chart-time-table3').style.display = "none";
+        
+        document.querySelector('.tent').style.display = "block";
+        document.querySelector('.tent2').style.display = "none";
+        
+        if (graph1.length > 9) {
+	    	document.querySelector(".tree-line3").style.display = "block";
+	        document.querySelector('.process-chart-time-table1').style.marginTop = "350px";
+	   	} else {
+	    	document.querySelector(".tree-line3").style.display = "none";
+	   	}
+        
+        if(graph1.length == 0) {
+	    	document.querySelector(".tree-line1").style.display = "none";
+	    	document.querySelector(".tree-line2").style.display = "none";
+        } else {
+	    	document.querySelector(".tree-line1").style.display = "block";
+	    	document.querySelector(".tree-line2").style.display = "block";
+        }
     });
     
-    document.querySelector('.tree-graph-line-title3').addEventListener("click", () => {
-        document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title2').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title3').style.backgroundColor = "#aaa";
-        document.querySelector('.tree-graph-line-title4').style.backgroundColor = "#eee";
+    document.querySelector('.process3').addEventListener("click", () => {
         
         document.querySelector('.treeProcess0').style.display = "none";
         document.querySelector('.treeProcess1').style.display = "none";
@@ -593,13 +685,27 @@ if (map.size() > 9) {%>
         document.querySelector('.process-chart-time-table1').style.display = "none";
         document.querySelector('.process-chart-time-table2').style.display = "table";
         document.querySelector('.process-chart-time-table3').style.display = "none";
+        
+        document.querySelector('.tent').style.display = "none";
+        document.querySelector('.tent2').style.display = "block";
+        
+        if (graph2.length > 9) {
+	    	document.querySelector(".tree-line3").style.display = "block";
+	        document.querySelector('.process-chart-time-table2').style.marginTop = "350px";
+	   	} else {
+	    	document.querySelector(".tree-line3").style.display = "none";
+	   	}
+        
+        if(graph2.length == 0) {
+	    	document.querySelector(".tree-line1").style.display = "none";
+	    	document.querySelector(".tree-line2").style.display = "none";
+        } else {
+	    	document.querySelector(".tree-line1").style.display = "block";
+	    	document.querySelector(".tree-line2").style.display = "block";
+        }
     });
     
-    document.querySelector('.tree-graph-line-title4').addEventListener("click", () => {
-        document.querySelector('.tree-graph-line-title1').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title2').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title3').style.backgroundColor = "#eee";
-        document.querySelector('.tree-graph-line-title4').style.backgroundColor = "#aaa";
+    document.querySelector('.process4').addEventListener("click", () => {
         
         document.querySelector('.treeProcess0').style.display = "none";
         document.querySelector('.treeProcess1').style.display = "none";
@@ -609,10 +715,25 @@ if (map.size() > 9) {%>
         document.querySelector('.process-chart-time-table1').style.display = "none";
         document.querySelector('.process-chart-time-table2').style.display = "none";
         document.querySelector('.process-chart-time-table3').style.display = "table";
+        
+        document.querySelector('.tent').style.display = "none";
+        document.querySelector('.tent2').style.display = "none";
+        
+        if (graph3.length > 9) {
+	    	document.querySelector(".tree-line3").style.display = "block";
+	        document.querySelector('.process-chart-time-table3').style.marginTop = "350px";
+	   	} else {
+	    	document.querySelector(".tree-line3").style.display = "none";
+	   	}
+        
+        if(graph3.length == 0) {
+	    	document.querySelector(".tree-line1").style.display = "none";
+	    	document.querySelector(".tree-line2").style.display = "none";
+        } else {
+	    	document.querySelector(".tree-line1").style.display = "block";
+	    	document.querySelector(".tree-line2").style.display = "block";
+        }
     });
-    
-   
-
 
     // 모바일 대응 스크립트
     hover.forEach(link => {
@@ -637,13 +758,62 @@ if (map.size() > 9) {%>
         });
     });
 
-
     // 마이페이지
     document.querySelector("#workerName").addEventListener("click", () => {
         window.open("myPage.html", '_blank', 'width = 630, height = 470, top=100, left=100');
     });
     
-   
+
+    // 라인 각 값
+    // i == 라인 번호
+    <%for (int i = 1; i <= list.size(); i++) {%>	
+		const status<%=i%> = document.getElementById('status<%=i%>'); // 현재상황 영역
+		const defectRate<%=i%> = document.getElementById('defectRate<%=i%>'); // 불량률 영역
+		const defectCount<%=i%> = document.getElementById('defectCount<%=i%>'); // 불량 영역
+		const goodCount<%=i%> = document.getElementById('goodCount<%=i%>'); // 통과 영역
+		const operations<%=i%> = document.getElementById('operations<%=i%>'); // 사이클 영역
+		
+		
+		
+		const maxIterations<%=i%> = countNum<%=i - 1%>; // 만들개수 설정
+		let iteration<%=i%> = completComNum<%=i - 1%> + failComNum<%=i - 1%>; // 현재 생산 개수
+		
+		let lineCount<%=i%> = 0;
+		
+		
+
+	<%}%>
+
+	function runProcess() {
+		<%for (int i = 1; i <= list.size(); i++) { // 3%>
+		console.log("countNum" + countNum<%=i - 1%>)
+		    if (iteration<%=i%> < maxIterations<%=i%>) {
+		    	
+		    
+		        let setProC<%=i%> = setInterval(() => {
+		            status<%=i%>.textContent = 'Completed';
+		            status<%=i%>.style.color = 'green';
+	
+		            lineCount<%=i%>++;
+
+		        }, 1000);
+		        
+		        let setProC2<%=i%> = setInterval(() => {
+			        status<%=i%>.textContent = 'Running';
+			        status<%=i%>.style.color = 'red';
+			        
+			        
+			        
+		        }, 2000);
+		        
+		    } else {
+		    	clearInterval(setProC<%=i%>);
+		    	clearInterval(setProC2<%=i%>);
+		    }
+	    <%}%>
+	}
+	runProcess();
+
 })
 </script>
 </body>

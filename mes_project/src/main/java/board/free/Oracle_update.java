@@ -29,11 +29,7 @@ public class Oracle_update extends HttpServlet {
 	}
 
 	void test(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-//		들어오는 한글 깨짐 방지
 		request.setCharacterEncoding("utf-8");
-
-//		내보내는 한글 깨짐 방지
 		response.setContentType("text/html; charset=utf-8;");
 
 		try {
@@ -42,37 +38,27 @@ public class Oracle_update extends HttpServlet {
 			
 			String title = request.getParameter("title");
 			String content = request.getParameter("content");
-			String writer = request.getParameter("writer");
 			String seq = request.getParameter("seq");
 			
 
 			String query = "";
 			query += " update";
-			query += " test2";
+			query += " board";
 			query += " set";
 
-			query += " title = ? ,";
+			query += " b_title = ? ,";
 
-			query += " content = ? ,";
+			query += " b_content = ?";
 
-			query += " writer = ? ";
-
-			query += " where seq = ? and boardType = '자유게시판'";
+			query += " where b_sequence = ? and boardType = '자유게시판'";
 
 			System.out.println("query : " + query);
 			PreparedStatement ps = con.prepareStatement(query);
 
 			ps.setString(1, title);
 			ps.setString(2, content);
-			ps.setString(3, writer);
-			ps.setString(4, seq);
+			ps.setString(3, seq);
 
-			System.out.println("----------바꿀거-----------");
-			System.out.println("title : " + title);
-			System.out.println("content : " + content);
-			System.out.println("writer : " + writer);
-			System.out.println("seq : " + seq);
-			System.out.println("--------------------------");
 
 			int count = ps.executeUpdate();
 
@@ -90,8 +76,8 @@ public class Oracle_update extends HttpServlet {
 		// DB 접속
 		String driver = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@112.148.46.134:51521:xe";
-		String user = "scott4_3";
-		String password = "tiger";
+		String user = "unchild";
+		String password = "mesteam";
 
 		Connection con = null;
 

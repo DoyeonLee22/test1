@@ -24,9 +24,11 @@
 	session = request.getSession(false);
 	String role = null;
 	String userId = null;
+	int staffno = 0;
 	if (session != null) {
 		role = (String) session.getAttribute("role");
 		userId = (String) session.getAttribute("user");
+		staffno = (int) session.getAttribute("staffno");
 	}
 	System.out.println("----------------------------------------------------");
 	System.out.println("session : " + session);
@@ -244,7 +246,7 @@
 									<td style="display: none"><input type="text" name="num"
 										value="1"></td>
 									<td style="display: none"><input type="text" name="writer"
-										value="${sessionScope.name}"></td>
+										value="${sessionScope.staffno}"></td>
 									<td style="display: none"><input type="text" name="hits"
 										value="0"></td>
 									<td style="display: none"><input type="text" name="wdate"

@@ -20,14 +20,17 @@
 	session = request.getSession(false);
 	String role = null;
 	String userId = null;
+	int staffno = 0;
 	if (session != null) {
 		role = (String) session.getAttribute("role");
 		userId = (String) session.getAttribute("user");
+		staffno = (int) session.getAttribute("staffno");
 	}
 	System.out.println("----------------------------------------------------");
 	System.out.println("session : " + session);
 	System.out.println("role : " + role);
 	System.out.println("userId : " + userId);
+	System.out.println("staffno : " + staffno);
 
 	String displayGrade = "잘못된 접근";
 	String displayTitle = "잘못된 접근";
@@ -200,6 +203,7 @@
 								int seq = board.getSeq();
 								String userDBId = board.getUserId();
 								String num = board.getNum();
+								
 								String title = board.getTitle();
 								String content = board.getContent();
 								String writer = board.getWriter();
@@ -207,7 +211,7 @@
 						%>
 						<tr class="noticeTr">
 							<td style="display: none" id="userIdWrite"><%=userDBId%></td>
-							<td><%=num%></td>
+							<td><%=num.replace("게시판","")%></td>
 							<td class="tableTdTitle" data-seq="<%=seq%>"><%=title%></td>
 							<td style="display: none;"><textarea class="contentBox"><%=content%></textarea></td>
 							<td class="writer"><%=writer%></td>

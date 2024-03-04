@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,10 +23,11 @@ public class ProcessServ extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		progressUp(request, response);
+
+			proInsert(request, response);
 	}
 
-	void progressUp(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	void proInsert(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 //		들어오는 한글 깨짐 방지
 		request.setCharacterEncoding("utf-8");
 
@@ -52,6 +55,7 @@ public class ProcessServ extends HttpServlet {
 
 					String dateTimeString = request.getParameter("endProTime" + i);
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 					LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
 
 					date[i] = dateTime;
@@ -107,8 +111,7 @@ public class ProcessServ extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		request.setAttribute("list", list);
-		request.getRequestDispatcher("temp.jsp").forward(request, response);
+		response.sendRedirect("grade");
 	}
 
 	private Connection getConn() {

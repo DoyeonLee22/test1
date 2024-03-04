@@ -43,9 +43,9 @@ public class Oracle_delete extends HttpServlet {
 		String query = "";
 		query += " delete";
 		query += " from";
-		query += " test2";
+		query += " board";
 		query += " where";
-		query += " seq";
+		query += " b_sequence";
 		query += " = ";
 		query += seq;
 		if ("자유게시판".equals(boardType)) {
@@ -70,8 +70,8 @@ public class Oracle_delete extends HttpServlet {
 		// DB 접속
 		String driver = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@112.148.46.134:51521:xe";
-		String user = "scott4_3";
-		String password = "tiger";
+		String user = "unchild";
+		String password = "mesteam";
 
 		Connection con = null;
 

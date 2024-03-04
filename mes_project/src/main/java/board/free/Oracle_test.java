@@ -30,9 +30,6 @@ public class Oracle_test extends HttpServlet {
 		response.setContentType("text/html; charset=utf-8;");
 
 		String boardType = request.getParameter("boardType");
-		System.out.println("================================================");
-		System.out.println("          boardType : " + boardType);
-		System.out.println("================================================");
 		if (boardType != null && boardType.equals("자유게시판")) {
 			try {
 				showFreeBoard(request, response);
@@ -71,11 +68,8 @@ public class Oracle_test extends HttpServlet {
 
 		List list = new ArrayList();
 		String query = "";
-		query += " select";
-		query += " *";
-		query += " from";
-		query += " test2";
-		query += " where boardType = '자유게시판'";
+		query += " SELECT * FROM STAFF s, board b WHERE s.staffno = b.staffno";
+		query += " and boardType = '자유게시판'";
 
 		System.out.println("query : " + query);
 		PreparedStatement ps = con.prepareStatement(query);
@@ -85,20 +79,18 @@ public class Oracle_test extends HttpServlet {
 
 		while (rs.next()) {
 			String boardType = rs.getString("boardType");
-			int seq = rs.getInt("seq");
+			int seq = rs.getInt("b_sequence");
 			String userId = rs.getString("userId");
-			String num = rs.getString("num");
-			String title = rs.getString("title");
-			String content = rs.getString("content");
-			String writer = rs.getString("writer");
-			Date wDate = rs.getDate("wdate");
-			int hits = rs.getInt("hits");
+			String title = rs.getString("b_title");
+			String content = rs.getString("b_content");
+			String writer = rs.getString("sname");
+			Date wDate = rs.getDate("b_date");
+			int hits = rs.getInt("b_view");
 
 			BoardDTO dto = new BoardDTO();
 			dto.setBoardType(boardType);
 			dto.setSeq(seq);
 			dto.setUserId(userId);
-			dto.setNum(num);
 			dto.setTitle(title);
 			dto.setContent(content);
 			dto.setWriter(writer);
@@ -131,11 +123,8 @@ public class Oracle_test extends HttpServlet {
 
 		List list = new ArrayList();
 		String query = "";
-		query += " select";
-		query += " *";
-		query += " from";
-		query += " test2";
-		query += " where boardType = 'QaA게시판'";
+		query += " SELECT * FROM STAFF s, board b WHERE s.staffno = b.staffno";
+		query += " and boardType = 'QaA게시판'";
 
 		System.out.println("query : " + query);
 		PreparedStatement ps = con.prepareStatement(query);
@@ -145,20 +134,18 @@ public class Oracle_test extends HttpServlet {
 
 		while (rs.next()) {
 			String boardType = rs.getString("boardType");
-			int seq = rs.getInt("seq");
+			int seq = rs.getInt("b_sequence");
 			String userId = rs.getString("userId");
-			String num = rs.getString("num");
-			String title = rs.getString("title");
-			String content = rs.getString("content");
-			String writer = rs.getString("writer");
-			Date wDate = rs.getDate("wdate");
-			int hits = rs.getInt("hits");
+			String title = rs.getString("b_title");
+			String content = rs.getString("b_content");
+			String writer = rs.getString("sname");
+			Date wDate = rs.getDate("b_date");
+			int hits = rs.getInt("b_view");
 
 			BoardDTO dto = new BoardDTO();
 			dto.setBoardType(boardType);
 			dto.setSeq(seq);
 			dto.setUserId(userId);
-			dto.setNum(num);
 			dto.setTitle(title);
 			dto.setContent(content);
 			dto.setWriter(writer);
@@ -173,7 +160,6 @@ public class Oracle_test extends HttpServlet {
 
 		request.setAttribute("list", list);
 
-//	디스패쳐 포워드로 jsp로 보낸다.
 		RequestDispatcher dispatch = request.getRequestDispatcher("QA.jsp");
 
 		try {
@@ -188,12 +174,8 @@ public class Oracle_test extends HttpServlet {
 	void showSuggestBoard(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
 		Connection con = getConn();
 		List list = new ArrayList();
-		String query = "";
-		query += " select";
-		query += " *";
-		query += " from";
-		query += " test2";
-		query += " where boardType = '건의게시판'";
+		
+		String query = "SELECT * FROM STAFF s, board b WHERE s.staffno = b.staffno and boardtype = '건의게시판'";
 
 		System.out.println("query : " + query);
 		PreparedStatement ps = con.prepareStatement(query);
@@ -203,20 +185,18 @@ public class Oracle_test extends HttpServlet {
 
 		while (rs.next()) {
 			String boardType = rs.getString("boardType");
-			int seq = rs.getInt("seq");
+			int seq = rs.getInt("b_sequence");
 			String userId = rs.getString("userId");
-			String num = rs.getString("num");
-			String title = rs.getString("title");
-			String content = rs.getString("content");
-			String writer = rs.getString("writer");
-			Date wDate = rs.getDate("wdate");
-			int hits = rs.getInt("hits");
+			String title = rs.getString("b_title");
+			String content = rs.getString("b_content");
+			String writer = rs.getString("sname");
+			Date wDate = rs.getDate("b_date");
+			int hits = rs.getInt("b_view");
 
 			BoardDTO dto = new BoardDTO();
 			dto.setBoardType(boardType);
 			dto.setSeq(seq);
 			dto.setUserId(userId);
-			dto.setNum(num);
 			dto.setTitle(title);
 			dto.setContent(content);
 			dto.setWriter(writer);
@@ -248,8 +228,8 @@ public class Oracle_test extends HttpServlet {
 		// DB 접속
 		String driver = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@112.148.46.134:51521:xe";
-		String user = "scott4_3";
-		String password = "tiger";
+		String user = "unchild";
+		String password = "mesteam";
 
 		Connection con = null;
 

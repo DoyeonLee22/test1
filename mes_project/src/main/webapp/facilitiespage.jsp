@@ -101,8 +101,8 @@
 						<div class="menu-bar-content">
 							<ul>
 								<li><a href="monitoring.jsp">설비 모니터링</a></li>
-								<li><a href="process.jsp">공정도</a></li>
-								<li><a href="facilitiespage.jsp">설비 설정</a></li>
+								<li><a href="monitor">공정도</a></li>
+								<li><a href="grade">설비 설정</a></li>
 							</ul>
 						</div>
 						<div class="menu-bar-content">

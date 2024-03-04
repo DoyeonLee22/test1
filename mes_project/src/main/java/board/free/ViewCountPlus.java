@@ -39,14 +39,14 @@ public class ViewCountPlus extends HttpServlet {
 		
 		String query = "";
 		query += " update";
-		query += " test2";
+		query += " board";
 		query += " set";
 
-		query += " hits = ( select hits from test2";
+		query += " b_view = ( select b_view from board";
 
-		query += " where seq = ?) + 1";
+		query += " where b_sequence = ?) + 1";
 
-		query += " where seq = ?";
+		query += " where b_sequence = ?";
 		
 		System.out.println("query : " + query);
 		
@@ -69,8 +69,8 @@ public class ViewCountPlus extends HttpServlet {
 		// DB 접속
 		String driver = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@112.148.46.134:51521:xe";
-		String user = "scott4_3";
-		String password = "tiger";
+		String user = "unchild";
+		String password = "mesteam";
 
 		Connection con = null;
 
